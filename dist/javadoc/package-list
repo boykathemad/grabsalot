@@ -1,0 +1,13 @@
+net.grabsalot
+net.grabsalot.business
+net.grabsalot.business.task
+net.grabsalot.core
+net.grabsalot.dao
+net.grabsalot.dao.local
+net.grabsalot.dao.service.lastfm
+net.grabsalot.gui
+net.grabsalot.gui.progress
+net.grabsalot.gui.settings
+net.grabsalot.i18n
+net.grabsalot.util
+net.grabsalot.util.players

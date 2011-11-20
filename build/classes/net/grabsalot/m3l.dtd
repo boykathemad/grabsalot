@@ -1,0 +1,35 @@
+<!ENTITY % coreattrs
+ "timestamp CDATA #IMPLIED
+  path      CDATA #IMPLIED
+  hash      CDATA #IMPLIED
+  user		CDATA #IMPLIED"
+>
+
+
+<!ELEMENT collection (name?,artist*,album*)>
+<!ELEMENT artist (name?,album*)>
+<!ELEMENT album (title?,date?,label?,albumartist?,track*)>
+<!ELEMENT track (#PCDATA)>
+
+<!ATTLIST collection
+	%coreattrs;
+	childCount CDATA #IMPLIED
+>
+
+<!ATTLIST artist
+	%coreattrs;
+	childCount CDATA #IMPLIED
+>
+
+<!ATTLIST album
+	%coreattrs;
+	childCount CDATA #IMPLIED
+>
+
+<!ATTLIST track
+	%coreattrs;
+>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
