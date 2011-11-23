@@ -34,7 +34,6 @@ public class MainMenuBarActions implements ActionListener {
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_LOAD)) {
 			LoadFrame lfrm = new LoadFrame();
-
 		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_RESTART)) {

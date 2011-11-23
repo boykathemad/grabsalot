@@ -46,14 +46,11 @@ public class LoadFrame extends JFrame {
 	private JRadioButton rbtCollection, rbtArtist, rbtAlbum;
 	private ButtonGroup btgSource;
 	private JCheckBox chkLoadLastOnStartup;
-
 	private JFileChooser chooser;
-
 	private List<String> collectionHistory;
 	private File source;
 	private boolean loadLast;
 	private Application waitObject;
-
 	private static final long serialVersionUID = 2479242868400814549L;
 
 	/**
@@ -83,6 +80,7 @@ public class LoadFrame extends JFrame {
 		cmbPath.setEditable(true);
 		cmbPath.setSelectedItem(source.getAbsolutePath());
 		cmbPath.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				source = new File((String) cmbPath.getSelectedItem());
@@ -92,6 +90,7 @@ public class LoadFrame extends JFrame {
 
 		btnChoose = new JButton(Translator.$("BrowseButtonText"));
 		btnChoose.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (chooser.showOpenDialog((JButton) e.getSource()) == JFileChooser.APPROVE_OPTION) {
@@ -127,6 +126,7 @@ public class LoadFrame extends JFrame {
 
 		chkLoadLastOnStartup = new JCheckBox(Translator.$("LoadLastOnStartup"), this.loadLast);
 		chkLoadLastOnStartup.addItemListener(new ItemListener() {
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Configuration.getInstance().setProperty(Configuration.LOAD_LAST_WORKING_DIRECTORY, LoadFrame.this.chkLoadLastOnStartup.isSelected());
@@ -137,11 +137,13 @@ public class LoadFrame extends JFrame {
 
 		btnProcess = new JButton(Translator.$("LoadButtonText"));
 		btnProcess.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Application.workingPath = source;
 				Application.workingMode = LoadFrame.this.getSelectedMode();
 				if (Application.workingMode != null) {
+					Configuration.getInstance().addHistory(source);
 					LoadFrame.this.setVisible(false);
 					Cacher.getMainFrame().load(Application.workingPath, Application.workingMode);
 				}

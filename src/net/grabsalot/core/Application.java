@@ -69,9 +69,9 @@ public class Application {
 	 * Display the MainFrame and auto-load the collection.
 	 */
 	public static void showMainFrame() throws ApplicationException {
-		if (Application.workingPath != null) {
-			Configuration.getInstance().addHistory(Application.workingPath);
-		}
+//		if (Application.workingPath != null) {
+//			Configuration.getInstance().addHistory(Application.workingPath);
+//		}
 		window = MainFrame.instantiate();
 		window.setSource(workingPath);
 		window.setMode(workingMode);

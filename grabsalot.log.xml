@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+
+<?xml-stylesheet type="text/xsl" href="logviewer.xsl"?>
+<log>
+<record>
+  <date>2011-11-23T15:15:04</date>
+  <millis>1322054104315</millis>
+  <sequence>0</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>INFO</level>
+  <class>net.grabsalot.core.Application</class>
+  <method>start</method>
+  <thread>1</thread>
+  <message>The application is starting up. First log entry.</message>
+</record>
+<record>
+  <date>2011-11-23T15:15:07</date>
+  <millis>1322054107057</millis>
+  <sequence>1</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>INFO</level>
+  <class>net.grabsalot.core.Application</class>
+  <method>start</method>
+  <thread>1</thread>
+  <message>Application started successfully!</message>
+</record>
+<record>
+  <date>2011-11-23T15:15:29</date>
+  <millis>1322054129096</millis>
+  <sequence>2</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.gui.ArtistInfoPanel</class>
+  <method>loadFromLocal</method>
+  <thread>25</thread>
+  <message>ArtistInfoPanel:loadFromLocal: failed to load Logo.</message>
+</record>
+<record>
+  <date>2011-11-23T15:15:29</date>
+  <millis>1322054129099</millis>
+  <sequence>3</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
+  <method>callMethod</method>
+  <thread>25</thread>
+  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=artist.getInfo&amp;artist=Zdob+%C5%9Ei+Zdub</message>
+</record>
+<record>
+  <date>2011-11-23T15:15:29</date>
+  <millis>1322054129927</millis>
+  <sequence>4</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.Artist</class>
+  <method>getImageUrl</method>
+  <thread>25</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@f757c05</message>
+</record>
+<record>
+  <date>2011-11-23T15:15:29</date>
+  <millis>1322054129943</millis>
+  <sequence>5</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.business.task.TaskManager</class>
+  <method>start</method>
+  <thread>25</thread>
+  <message>TaskManager:start: There was no souitable task to start.</message>
+</record>
+<record>
+  <date>2011-11-23T15:16:48</date>
+  <millis>1322054208476</millis>
+  <sequence>6</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>INFO</level>
+  <class>net.grabsalot.business.Logger</class>
+  <method>log</method>
+  <thread>14</thread>
+  <message>Processing X:musicElectronic using the !WorkingModeCOLLECTION! mode.</message>
+</record>
+</log>

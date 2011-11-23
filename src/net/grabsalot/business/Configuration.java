@@ -101,13 +101,13 @@ public class Configuration {
 	 */
 	public void addHistory(File workingPath) {
 		this.setProperty(Configuration.WORKING_PATH, workingPath.getAbsolutePath());
-		if (workingPath.getAbsolutePath().equals(this.getStringProperty(WORKING_PATH_HISTORY + 0))) {
+		if (workingPath.getAbsolutePath().equals(this.getStringProperty(WORKING_PATH_HISTORY + "0"))) {
 			return;
 		}
-		for (int i = HISTORY_LENGHT; i > 1; --i) {
+		for (int i = HISTORY_LENGHT; i > 0; --i) {
 			this.setProperty(WORKING_PATH_HISTORY + (i), this.getStringProperty(WORKING_PATH_HISTORY + (i - 1)));
 		}
-		this.setProperty(WORKING_PATH_HISTORY + 1, workingPath.getAbsolutePath());
+		this.setProperty(WORKING_PATH_HISTORY + "0", workingPath.getAbsolutePath());
 	}
 
 	/**

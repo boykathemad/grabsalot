@@ -12,9 +12,9 @@ import org.dom4j.DocumentHelper;
 
 /**
  * A {@link LocalElement} that holds artist specific information.
- * 
+ *
  * @author madboyka
- * 
+ *
  */
 public class LocalArtist extends LocalElement implements IArtist {
 
@@ -30,7 +30,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	/**
 	 * Constructor using a file denoting the directory for the artist.
-	 * 
+	 *
 	 * @param fromDir
 	 */
 	public LocalArtist(File fromDir) {
@@ -40,7 +40,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 	/**
 	 * Scans the artists directory and returns a {@link LocalAlbum} array
 	 * containing albums found in the directory.
-	 * 
+	 *
 	 * @return
 	 */
 	public LocalAlbum[] getAlbums() {
@@ -52,17 +52,22 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	public void loadAlbums() {
 		if (!albumsLoaded) {
+			File[] files = this.getAudioFiles();
+			LocalAlbum album = new LocalAlbum(this,this.getPath());
 			File[] dirs = this.getSubDirectories();
-			albums = new LocalAlbum[dirs.length];
+			albums = new LocalAlbum[dirs.length + (album.getAudioFiles().length > 0 ? 1 : 0)];
 			for (int i = 0; i < dirs.length; ++i) {
 				albums[i] = new LocalAlbum(this, dirs[i]);
+			}
+			if (album.getAudioFiles().length > 0) {
+				albums[albums.length-1] = album;
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see grabsalot.dao.ICollectionElement#getName()
 	 */
 	@Override
@@ -72,7 +77,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -82,7 +87,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	/**
 	 * Not yet implemented.
-	 * 
+	 *
 	 * @return
 	 */
 	public Image getLogo() {
@@ -92,7 +97,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	/**
 	 * Not yet implemented.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getBioSummary() {
@@ -102,7 +107,7 @@ public class LocalArtist extends LocalElement implements IArtist {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see grabsalot.dao.local.LocalElement#getElementType()
 	 */
 	@Override
