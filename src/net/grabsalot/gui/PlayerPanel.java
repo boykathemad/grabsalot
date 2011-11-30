@@ -1,12 +1,8 @@
 package net.grabsalot.gui;
 
-import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.ref.PhantomReference;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 import javax.swing.BoxLayout;
 import javax.swing.event.ChangeEvent;
 
@@ -19,10 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.StrokeBorder;
 import javax.swing.event.ChangeListener;
 import net.grabsalot.business.Configuration;
 import net.grabsalot.util.TickListener;

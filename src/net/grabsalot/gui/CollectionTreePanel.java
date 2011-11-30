@@ -1,25 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.grabsalot.gui;
 
+import java.awt.event.KeyEvent;
 import net.grabsalot.business.CollectionTreeNode;
-import net.grabsalot.dao.local.LocalAlbum;
+import net.grabsalot.business.task.TaskEvent;
 import net.grabsalot.dao.local.LocalArtist;
 import net.grabsalot.dao.local.LocalCollection;
-import net.grabsalot.dao.local.LocalTrack;
-
-import net.grabsalot.gui.CollectionTreePopupMenu;
-import net.grabsalot.gui.IconNodeRenderer;
-import net.grabsalot.gui.MainFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -32,17 +26,17 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import net.grabsalot.business.CollectionLoader;
+import net.grabsalot.business.task.Task;
+import net.grabsalot.business.task.TaskListener;
+import net.grabsalot.business.task.TaskManager;
 
-/**
- *
- * @author madboyka
- */
-public class CollectionTreePanel extends JPanel {
+public class CollectionTreePanel extends JPanel implements LocalizableComponent {
 
 	private MainFrame container;
 	private JTextField txtSearch;
-	private JTree lstCollection;
-	private CollectionTreeNode treeRoot;
+	private volatile JTree lstCollection;
+	private volatile CollectionTreeNode treeRoot;
 	private CollectionTreePopupMenu treePopupMenu;
 
 	public CollectionTreePanel(MainFrame container) {
@@ -75,7 +69,7 @@ public class CollectionTreePanel extends JPanel {
 	}
 
 	private void setupTree() {
-		treeRoot = new CollectionTreeNode(new LocalCollection(this.container.getSource()));
+		treeRoot = new CollectionTreeNode(null);
 		lstCollection = new JTree(treeRoot);
 		treePopupMenu = new CollectionTreePopupMenu(lstCollection, this.container);
 		lstCollection.addTreeSelectionListener(new TreeSelectionListener() {
@@ -86,24 +80,44 @@ public class CollectionTreePanel extends JPanel {
 			}
 		});
 		lstCollection.setExpandsSelectedPaths(false);
-		lstCollection.setRootVisible(true);
+		lstCollection.setRootVisible(false);
 		lstCollection.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		lstCollection.setCellRenderer(new IconNodeRenderer());
 		lstCollection.setRowHeight(32);
 		lstCollection.setDragEnabled(true);
 		lstCollection.setLargeModel(true);
+		lstCollection.addTreeSelectionListener(new TreeSelectionListener() {
+
+			@Override
+			public void valueChanged(TreeSelectionEvent e) {
+				container.loadSelectionInfo((CollectionTreeNode) e.getNewLeadSelectionPath().getLastPathComponent());
+			}
+		});
+		lstCollection.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == 525) {
+					CollectionTreeNode selection = (CollectionTreeNode) lstCollection.getLastSelectedPathComponent();
+					Rectangle bounds = lstCollection.getRowBounds(lstCollection.getSelectionRows()[0]).getBounds();
+//					lstCollection.getRowForPath(selection)).getLocation();
+					treePopupMenu.show(selection, bounds.x, bounds.y + bounds.height);
+				}
+			}
+		});
 		lstCollection.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					container.loadSelectionInfo((CollectionTreeNode) lstCollection.getLastSelectedPathComponent());
-				}
 				if (e.isPopupTrigger()) {
 					treePopupMenu.show((CollectionTreeNode) lstCollection.getClosestPathForLocation(e.getX(), e.getY()).getLastPathComponent(), e.getX(), e.getY());
+					return;
+				}
+				if (e.getClickCount() == 1) {
+//					container.loadSelectionInfo((CollectionTreeNode) lstCollection.getLastSelectedPathComponent());
 				}
 				if (e.getButton() == MouseEvent.BUTTON1) {
-					//lstCollection.setSelectionRow(lstCollection.getClosestRowForLocation(e.getX(), e.getY()));
+//					lstCollection.setSelectionRow(lstCollection.getClosestRowForLocation(e.getX(), e.getY()));
 				}
 			}
 		});
@@ -111,26 +125,25 @@ public class CollectionTreePanel extends JPanel {
 		this.add(new JScrollPane(lstCollection));
 	}
 
-	public void loadCollection(LocalCollection manager) {
-		treeRoot.setUserObject(manager);
-		LocalArtist[] artists = manager.getArtists();
-		this.container.setStatusBarText("Loading collection...");
-		for (int i = 0; i < artists.length; ++i) {
-			CollectionTreeNode artistNode = new CollectionTreeNode(artists[i]);
-			treeRoot.add(artistNode);
-			LocalAlbum[] albums = artists[i].getAlbums();
-			for (int j = 0; j < albums.length; ++j) {
-				CollectionTreeNode albumNode = new CollectionTreeNode(albums[j]);
-				artistNode.add(albumNode);
-				LocalTrack[] tracks = albums[j].getTracks();
-				for (int k = 0; k < tracks.length; ++k) {
-					CollectionTreeNode trackNode = new CollectionTreeNode(tracks[k]);
-					albumNode.add(trackNode);
-				}
+	public void loadCollection(final LocalCollection manager) {
+		container.setStatusBarText("Loading collection...");
+		Task loader = new CollectionLoader(manager);
+		loader.addTaskListener(new TaskListener() {
+
+			@Override
+			public void taskError(TaskEvent e) {
+				container.setStatusBarText("Failed to load collection...");
 			}
-		}
-		lstCollection.scrollPathToVisible(new TreePath(((DefaultMutableTreeNode) treeRoot.getFirstChild()).getPath()));
-		this.container.setStatusBarIdle();
+
+			@Override
+			public void taskComplete(TaskEvent e) {
+				treeRoot.add(((CollectionLoader)e.getTaskObject()).getResult());
+				container.setStatusBarIdle();
+				lstCollection.scrollPathToVisible(new TreePath(((DefaultMutableTreeNode) treeRoot.getFirstChild()).getPath()));
+			}
+		});
+		TaskManager.getInstance().add(loader);
+		TaskManager.getInstance().start();
 	}
 
 	/**
@@ -140,7 +153,6 @@ public class CollectionTreePanel extends JPanel {
 	 * @param filter
 	 *            the string to matched the node names against
 	 */
-	@SuppressWarnings("unchecked")
 	public void filterTreeNodes(String filter) {
 		CollectionTreeNode i;
 		Enumeration<DefaultMutableTreeNode> en = treeRoot.children();
@@ -155,6 +167,11 @@ public class CollectionTreePanel extends JPanel {
 	}
 
 	public void clear() {
-		this.treeRoot.removeAllChildren();
+//		this.treeRoot.removeAllChildren();
+	}
+
+	@Override
+	public void updateLabels() {
+		treePopupMenu.updateLabels();
 	}
 }

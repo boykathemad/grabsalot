@@ -2,11 +2,6 @@ package net.grabsalot.business.task;
 
 import net.grabsalot.business.Logger;
 
-import net.grabsalot.business.task.Task;
-import net.grabsalot.business.task.TaskEvent;
-import net.grabsalot.business.task.TaskListener;
-import net.grabsalot.business.task.TaskManager;
-
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -14,7 +9,7 @@ public class TaskManager implements TaskListener {
 
 	private HashMap<String, Task> taskList;
 	private static TaskManager instance;
-	
+
 	public static TaskManager getInstance() {
 		if (instance == null) {
 			instance = new TaskManager();
@@ -25,7 +20,7 @@ public class TaskManager implements TaskListener {
 	public TaskManager() {
 		taskList = new HashMap<String, Task>();
 	}
-	
+
 	public void add(Task task) {
 		if (taskList.containsKey(task.getId())) {
 			taskList.get(task.getId()).stop();
@@ -33,7 +28,7 @@ public class TaskManager implements TaskListener {
 		taskList.put(task.getId(), task);
 		task.addTaskListener(this);
 	}
-	
+
 	public void start() {
 		try {
 			this.getNextAvailableTask().start();
@@ -41,7 +36,7 @@ public class TaskManager implements TaskListener {
 			Logger._().warning("TaskManager:start: There was no souitable task to start.");
 		}
 	}
-	
+
 	public Task getNextAvailableTask() {
 		Iterator<String> i = this.taskList.keySet().iterator();
 		while (i.hasNext()) {

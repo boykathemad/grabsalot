@@ -11,10 +11,21 @@ import java.util.ResourceBundle;
 
 public class Translator {
 
-	private static ResourceBundle RESOURCE_BUNDLE;
+	public static final String DEFAULT_LANGUAGE = "en";
+	private static ResourceBundle resource;
 
 	static {
-		setLanguage("EN");
+		setLanguage(DEFAULT_LANGUAGE);
+	}
+
+	public static boolean setLocale(Locale locale) {
+		try {
+			resource = ResourceBundle.getBundle("net.grabsalot.i18n.lang", locale);
+			return true;
+		} catch (MissingResourceException ex) {
+			Logger._().severe(ex.getMessage());
+			return false;
+		}
 	}
 
 	private Translator() {
@@ -22,7 +33,7 @@ public class Translator {
 
 	public static String $(String key) {
 		try {
-			return RESOURCE_BUNDLE.getString(key);
+			return resource.getString(key);
 		} catch (MissingResourceException e) {
 			return '!' + key + '!';
 		}
@@ -30,7 +41,7 @@ public class Translator {
 
 	public static String $(String key, String... substitutes) {
 		try {
-			String text = RESOURCE_BUNDLE.getString(key);
+			String text = resource.getString(key);
 			for (int i = 0; i < substitutes.length; ++i) {
 				String replace = (substitutes[i] != null) ? substitutes[i] : "";
 				text = text.replaceAll("\\{" + i + "\\}", replace);
@@ -42,13 +53,7 @@ public class Translator {
 	}
 
 	public static boolean setLanguage(String languageCode) {
-		try {
-			RESOURCE_BUNDLE = ResourceBundle.getBundle("net.grabsalot.i18n.lang", new Locale(languageCode));
-			return true;
-		} catch (MissingResourceException ex) {
-			Logger._().severe(ex.getMessage());
-			return false;
-		}
+		return setLocale(new Locale(languageCode));
 	}
 
 	public static List<String> getAvailableLanguages() {

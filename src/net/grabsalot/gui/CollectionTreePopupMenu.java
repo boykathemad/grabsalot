@@ -1,5 +1,6 @@
 package net.grabsalot.gui;
 
+import java.util.Arrays;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.CollectionTreeNode;
 import net.grabsalot.business.task.Task;
@@ -10,38 +11,40 @@ import net.grabsalot.dao.local.LocalElement;
 import net.grabsalot.dao.local.LocalTrack;
 import net.grabsalot.util.AlbumArt;
 
-import net.grabsalot.gui.MainFrame;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
+import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+import net.grabsalot.i18n.Translator;
 
-/** Popup menu used on the collection tree element.
+/** Pop-up menu used on the collection tree element.
  * @author madboyka
  *
  */
-public class CollectionTreePopupMenu extends JPopupMenu implements ActionListener {
+public class CollectionTreePopupMenu extends JPopupMenu implements ActionListener, LocalizableComponent {
 
 	private static final long serialVersionUID = -5103252433999245500L;
 	private JTree tree;
-	private JMenuItem rename;
-	private JMenuItem saveAlbumArt;
-	private JMenuItem saveAllAlbumArtsForArtist;
-	private JMenuItem saveAllAlbumArtsForCollection;
-	private JMenuItem saveInfoToXml;
-	private JMenuItem playTrack;
-	private JMenuItem enqueueTrack;
-	private JMenuItem playAlbum;
-	private JMenuItem expandChildren;
-	private JMenuItem expandToLeaves;
-	private JMenuItem saveAllMetadata;
+	private JMenuItem iRename;
+	private JMenuItem iSaveAlbumArt;
+	private JMenuItem iSaveAllAlbumArtsForArtist;
+	private JMenuItem iSaveAllAlbumArtsForCollection;
+	private JMenuItem iSaveInfoToXml;
+	private JMenuItem iPlayTrack;
+	private JMenuItem iEnqueueTrack;
+	private JMenuItem iPlayAllAlbums;
+	private JMenuItem iPlayAlbum;
+	private JMenuItem iExpandChildren;
+	private JMenuItem iExpandToLeaves;
+	private JMenuItem iSaveAllMetadata;
 	private MainFrame mainFrame;
 	private CollectionTreeNode overNode;
 
@@ -52,7 +55,51 @@ public class CollectionTreePopupMenu extends JPopupMenu implements ActionListene
 	public CollectionTreePopupMenu(JTree tree, MainFrame mainFrame) {
 		this.tree = tree;
 		this.mainFrame = mainFrame;
-		setMenuItems();
+		setupComponents();
+	}
+
+	private void setupComponents() {
+		iRename = new JMenuItem();
+		iRename.addActionListener(this);
+		iSaveAlbumArt = new JMenuItem();
+		iSaveAlbumArt.addActionListener(this);
+		iSaveAllAlbumArtsForArtist = new JMenuItem();
+		iSaveAllAlbumArtsForArtist.addActionListener(this);
+		iSaveAllAlbumArtsForCollection = new JMenuItem();
+		iSaveAllAlbumArtsForCollection.addActionListener(this);
+		iSaveInfoToXml = new JMenuItem();
+		iSaveInfoToXml.addActionListener(this);
+		iPlayTrack = new JMenuItem();
+		iPlayTrack.addActionListener(this);
+		iEnqueueTrack = new JMenuItem();
+		iEnqueueTrack.addActionListener(this);
+		iPlayAllAlbums = new JMenuItem();
+		iPlayAllAlbums.addActionListener(this);
+		iPlayAlbum = new JMenuItem();
+		iPlayAlbum.addActionListener(this);
+		iExpandChildren = new JMenuItem();
+		iExpandChildren.addActionListener(this);
+		iExpandToLeaves = new JMenuItem();
+		iExpandToLeaves.addActionListener(this);
+		iSaveAllMetadata = new JMenuItem();
+		iSaveAllMetadata.addActionListener(this);
+		updateLabels();
+	}
+
+	@Override
+	public void updateLabels() {
+		iRename.setText(Translator.$("collectionMenu.rename"));
+		iSaveAlbumArt.setText(Translator.$("collectionMenu.saveAlbumArt"));
+		iSaveAllAlbumArtsForArtist.setText(Translator.$("collectionMenu.saveAllAlbumArts"));
+		iSaveAllAlbumArtsForCollection.setText(Translator.$("collectionMenu.saveAllAlbumArts"));
+		iSaveInfoToXml.setText(Translator.$("collectionMenu.saveMetadata"));
+		iPlayTrack.setText(Translator.$("collectionMenu.playTrack"));
+		iEnqueueTrack.setText(Translator.$("collectionMenu.enqueueTrack"));
+		iPlayAllAlbums.setText(Translator.$("collectionMenu.playAllAlbums"));
+		iPlayAlbum.setText(Translator.$("collectionMenu.playThisAlbum"));
+		iExpandChildren.setText(Translator.$("collectionMenu.expandChildren"));
+		iExpandToLeaves.setText(Translator.$("collectionMenu.expandAll"));
+		iSaveAllMetadata.setText(Translator.$("collectionMenu.saveAllMetadata"));
 	}
 
 	/**
@@ -63,51 +110,28 @@ public class CollectionTreePopupMenu extends JPopupMenu implements ActionListene
 		if (overNode != null) {
 			nodeType = overNode.getElementType();
 		}
-		if (rename == null) {
-			rename = new JMenuItem("Rename");
-			rename.addActionListener(this);
-			saveAlbumArt = new JMenuItem("Save album art");
-			saveAlbumArt.addActionListener(this);
-			saveAllAlbumArtsForArtist = new JMenuItem("Save all album arts for this artist");
-			saveAllAlbumArtsForArtist.addActionListener(this);
-			saveAllAlbumArtsForCollection = new JMenuItem("Save all album arts");
-			saveAllAlbumArtsForCollection.addActionListener(this);
-			saveInfoToXml = new JMenuItem("Save info to xml");
-			saveInfoToXml.addActionListener(this);
-			playTrack = new JMenuItem("Play this track");
-			playTrack.addActionListener(this);
-			enqueueTrack = new JMenuItem("Enqueue this track");
-			enqueueTrack.addActionListener(this);
-			playAlbum = new JMenuItem("Play this album");
-			playAlbum.addActionListener(this);
-			expandChildren = new JMenuItem("Expand all children");
-			expandChildren.addActionListener(this);
-			expandToLeaves = new JMenuItem("Expand everything");
-			expandToLeaves.addActionListener(this);
-			saveAllMetadata = new JMenuItem("Save all metadata");
-			saveAllMetadata.addActionListener(this);
-		}
 		if (nodeType != 0 && nodeType != LocalElement.TRACK_ELEMENT_TYPE) {
 			// this.add(saveInfoToXml);
-			this.add(saveAllMetadata);
+			this.add(iSaveAllMetadata);
 		}
 		if (nodeType != LocalElement.COLLECTION_ELEMENT_TYPE) {
-			this.add(rename);
+			this.add(iRename);
 		} else {
-			this.add(expandChildren);
-			this.add(expandToLeaves);
-			this.add(saveAllAlbumArtsForCollection);
+			this.add(iExpandChildren);
+			this.add(iExpandToLeaves);
+			this.add(iSaveAllAlbumArtsForCollection);
 		}
 		if (nodeType == LocalElement.ARTIST_ELEMENT_TYPE) {
-			this.add(saveAllAlbumArtsForArtist);
+			this.add(iSaveAllAlbumArtsForArtist);
+			this.add(iPlayAllAlbums);
 		}
 		if (nodeType == LocalElement.ALBUM_ELEMENT_TYPE) {
-			this.add(saveAlbumArt);
-			this.add(playAlbum);
+			this.add(iSaveAlbumArt);
+			this.add(iPlayAlbum);
 		}
 		if (nodeType == LocalElement.TRACK_ELEMENT_TYPE) {
-			this.add(playTrack);
-			this.add(enqueueTrack);
+			this.add(iEnqueueTrack);
+			this.add(iPlayTrack);
 		}
 	}
 
@@ -139,7 +163,7 @@ public class CollectionTreePopupMenu extends JPopupMenu implements ActionListene
 		if (this.overNode == null) {
 			return;
 		}
-		if (e.getSource().equals(this.rename)) {
+		if (e.getSource().equals(this.iRename)) {
 			String newName = JOptionPane.showInputDialog("Enter new name:", this.overNode.getElement().getPath().getName());
 			if (newName == null) {
 				return;
@@ -154,7 +178,7 @@ public class CollectionTreePopupMenu extends JPopupMenu implements ActionListene
 						"Element renamed. Due to a bug sub elements won't be valid. Please rescan the collection.");
 			}
 		}
-		if (e.getSource().equals(this.saveAlbumArt)) {
+		if (e.getSource().equals(this.iSaveAlbumArt)) {
 			try {
 				File coverFile = ((LocalAlbum) overNode.getElement()).saveCover();
 				Cacher.getMainFrame().setStatusBarText("Cover art saved as :" + coverFile.getAbsolutePath());
@@ -162,36 +186,44 @@ public class CollectionTreePopupMenu extends JPopupMenu implements ActionListene
 				Cacher.getMainFrame().setStatusBarText("Failed to save cover art :" + ex.getMessage());
 			}
 		}
-		if (e.getSource().equals(this.saveAllAlbumArtsForArtist)) {
+		if (e.getSource().equals(this.iSaveAllAlbumArtsForArtist)) {
 			LocalAlbum[] albums = ((LocalArtist) overNode.getElement()).getAlbums();
 			AlbumArt.grabAll(albums);
 		}
-		if (e.getSource().equals(this.saveAllAlbumArtsForCollection)) {
+		if (e.getSource().equals(this.iSaveAllAlbumArtsForCollection)) {
 			AlbumArt.grabAll(null);
 		}
-		if (e.getSource().equals(this.playTrack)) {
+		if (e.getSource().equals(this.iPlayTrack)) {
 			Cacher.getMainFrame().playTrack((LocalTrack) overNode.getElement());
 		}
-		if (e.getSource().equals(this.enqueueTrack)) {
+		if (e.getSource().equals(this.iEnqueueTrack)) {
 			Cacher.getMainFrame().enqueueTrack((LocalTrack) overNode.getElement());
 		}
-		if (e.getSource().equals(this.playAlbum)) {
+		if (e.getSource().equals(this.iPlayAlbum)) {
 			Cacher.getMainFrame().playTracks(((LocalAlbum) overNode.getElement()).getTracks());
 		}
-		if (e.getSource().equals(this.expandChildren)) {
+		if (e.getSource().equals(this.iPlayAllAlbums)) {
+			LocalArtist artist = (LocalArtist) overNode.getElement();
+			List<LocalTrack> tracks = new ArrayList<LocalTrack>();
+			for (LocalAlbum album : artist.getAlbums()) {
+				tracks.addAll(Arrays.asList(album.getTracks()));
+			}
+			MainFrame.getInstance().playTracks(tracks.toArray(new LocalTrack[0]));
+		}
+		if (e.getSource().equals(this.iExpandChildren)) {
 			Enumeration<CollectionTreeNode> children = overNode.children();
 			while (children.hasMoreElements()) {
 				tree.expandPath(new TreePath(children.nextElement().getPath()));
 			}
 		}
-		if (e.getSource().equals(this.expandToLeaves)) {
+		if (e.getSource().equals(this.iExpandToLeaves)) {
 			Enumeration<CollectionTreeNode> children = overNode.children();
 			while (children.hasMoreElements()) {
 				tree.expandPath(new TreePath(children.nextElement().getLastLeaf().getPath()));
 			}
 		}
 
-		if (e.getSource().equals(this.saveAllMetadata)) {
+		if (e.getSource().equals(this.iSaveAllMetadata)) {
 			Task task = new Task() {
 
 				@Override

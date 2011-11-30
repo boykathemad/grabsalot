@@ -6,6 +6,7 @@ package net.grabsalot.util.players;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,10 +27,6 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
-import net.grabsalot.util.players.IPlayer;
-import net.grabsalot.util.players.PlaybackEvent;
-import net.grabsalot.util.players.PlaybackListener;
-import net.grabsalot.util.players.SpiPlayer;
 
 /**
  *
@@ -56,7 +53,7 @@ public class SpiPlayer implements IPlayer {
 
 	@Override
 	public void addPlaybackListener(PlaybackListener listener) {
-		this.listeners.add(listener);
+//		this.listeners.add(listener);
 	}
 
 	private Mixer getMixer() {
@@ -102,34 +99,30 @@ public class SpiPlayer implements IPlayer {
 		return line;
 	}
 
-	private void open() {
-		try {
-			AudioFileFormat aff = AudioSystem.getAudioFileFormat(audioFile);
-//			if (!AudioSystem.isFileTypeSupported(aff.getType())) {
-//				throw new Exception("Unsupported file");
-//			}
-			inputStream = AudioSystem.getAudioInputStream(audioFile);
-			stream = null;
-			if (inputStream != null) {
-				AudioFormat baseFormat = inputStream.getFormat();
-				outputFormat = new AudioFormat(
-						AudioFormat.Encoding.PCM_SIGNED,
-						baseFormat.getSampleRate(),
-						16,
-						baseFormat.getChannels(),
-						baseFormat.getChannels() * 2,
-						baseFormat.getSampleRate(),
-						false);
-				stream = AudioSystem.getAudioInputStream(outputFormat, inputStream);
-				open = true;
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			open = false;
+	private void open() throws Exception {
+		AudioFileFormat aff = AudioSystem.getAudioFileFormat(audioFile);
+		if (!AudioSystem.isFileTypeSupported(aff.getType())) {
+//			throw new Exception("Unsupported file");
+		}
+		inputStream = AudioSystem.getAudioInputStream(audioFile);
+		stream = null;
+		if (inputStream != null) {
+			AudioFormat baseFormat = inputStream.getFormat();
+			outputFormat = new AudioFormat(
+					AudioFormat.Encoding.PCM_SIGNED,
+					baseFormat.getSampleRate(),
+					16,
+					baseFormat.getChannels(),
+					baseFormat.getChannels() * 2,
+					baseFormat.getSampleRate(),
+					false);
+			stream = AudioSystem.getAudioInputStream(outputFormat, inputStream);
+			open = true;
 		}
 	}
 
 	private void rawplay(AudioFormat targetFormat, AudioInputStream din) throws IOException, LineUnavailableException {
+		System.out.println("SPIPlayer playing");
 		byte[] data = new byte[4096];
 		Date start = new Date();
 		line = getLine(targetFormat);
@@ -140,7 +133,8 @@ public class SpiPlayer implements IPlayer {
 //			FloatControl volCtrl = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
 //			volCtrl.setValue(0.3F);
 			int nBytesRead = 1, nBytesWritten = 0;
-			while (!stopped && nBytesRead > 0) {
+			while (!stopped && nBytesRead > -1) {
+				//&& parent.get() != null
 				lastPosition = (int) (new Date().getTime() - start.getTime());
 				nBytesRead = din.read(data, 0, data.length);
 				if (nBytesRead != -1) {
@@ -151,6 +145,7 @@ public class SpiPlayer implements IPlayer {
 			line.drain();
 			line.stop();
 			line.close();
+			stopped = true;
 			din.close();
 		}
 	}
@@ -162,8 +157,8 @@ public class SpiPlayer implements IPlayer {
 		try {
 			inputStream.close();
 			open = false;
-		} catch (IOException ex) {
-			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -174,11 +169,15 @@ public class SpiPlayer implements IPlayer {
 		try {
 			audioFileFormat = AudioSystem.getAudioFileFormat(audioFile);
 			Map<String, Object> properties = audioFileFormat.properties();
-			duration = (Long) properties.get("duration");
-			duration /= 1000000;
-		} catch (UnsupportedAudioFileException ex) {
-			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (IOException ex) {
+				System.out.println("Supported properties");
+			for (String key : properties.keySet()) {
+				System.out.println(key +" = " + properties.get(key));
+			}
+//			duration = (Long) properties.get("duration");
+//			duration /= 1000000;
+			duration = 1000;
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return (int) duration;
@@ -220,10 +219,8 @@ public class SpiPlayer implements IPlayer {
 				open();
 			}
 			rawplay(outputFormat, stream);
-		} catch (IOException ex) {
-			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (LineUnavailableException ex) {
-			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 

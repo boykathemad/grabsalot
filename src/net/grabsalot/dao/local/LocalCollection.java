@@ -55,7 +55,11 @@ public class LocalCollection extends LocalElement {
 	 */
 	@Override
 	public String toString() {
-		return "Collection";
+		if (path != null) {
+			return path.getName() + "(collection)";
+		} else {
+			return "Collection";
+		}
 	}
 
 	/* (non-Javadoc)
@@ -110,6 +114,7 @@ public class LocalCollection extends LocalElement {
 
 	public synchronized void scanTracksThreaded() {
 		new Thread() {
+
 			@Override
 			public void run() {
 				scanTracks();

@@ -41,20 +41,18 @@ public class AboutDialog extends JDialog {
 	private JTextPane txpCredits;
 	private JScrollPane jspCredits;
 
-	public AboutDialog(Window owner, ModalityType modalityType) {
-		super(owner, modalityType);
+	public AboutDialog() {
+		super(MainFrame.getInstance(), ModalityType.DOCUMENT_MODAL);
 		this.setTitle(Application.name);
 		this.setupComponents();
 		this.setPreferredSize(new Dimension(600, 600));
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		// this.setModal(true);
-		// this.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-		// this.setModalityType(ModalityType.APPLICATION_MODAL);
 	}
 
 	private void setupComponents() {
+
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
 
 		ibxLogo = new JImageBox(ImageUtil.loadFromResource("net/grabsalot/logo.png"));

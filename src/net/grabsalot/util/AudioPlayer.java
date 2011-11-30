@@ -10,6 +10,7 @@ import net.grabsalot.util.players.SpiPlayer;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import net.grabsalot.util.players.PlaybackEvent;
@@ -21,7 +22,7 @@ import net.grabsalot.util.players.PlaybackEvent;
  */
 public class AudioPlayer {
 
-	private IPlayer player;
+	private volatile IPlayer player;
 	private File audioFile;
 	private PlayerThread thread;
 	private boolean playing = false;
@@ -37,7 +38,7 @@ public class AudioPlayer {
 	}
 
 	public AudioPlayer(File file) {
-		this.listeners = new Vector<PlaybackListener>();
+		this.listeners = new ArrayList<PlaybackListener>();
 		this.setAudio(file);
 	}
 
@@ -49,16 +50,16 @@ public class AudioPlayer {
 		this.audioFile = file;
 		if (file != null) {
 			String extension = FileUtil.getFileExtension(this.audioFile);
-			if (true) {
-				this.player = new SpiPlayer(audioFile);
-			} else if (extension.equals("mp3")) {
-				this.player = new MP3Player(this.audioFile);
-			} else if (extension.equals("flac")) {
-				this.player = new FlacPlayer(this.audioFile);
-			} else if (extension.equals("ape")) {
-				this.player = new ApePlayer(this.audioFile);
+			if (false) {
+//			} else if (extension.equals("mp3")) {
+//				this.player = new MP3Player(this.audioFile);
+//			} else if (extension.equals("flac")) {
+//				this.player = new FlacPlayer(this.audioFile);
+//			} else if (extension.equals("ape")) {
+//				this.player = new ApePlayer(this.audioFile);
 			} else {
-				this.player = null;
+				this.player = new SpiPlayer(audioFile);
+//				this.player = null;
 			}
 			this.assignListeners();
 		}
@@ -128,8 +129,8 @@ public class AudioPlayer {
 			try {
 				playing = true;
 				player.play();
+				notifyListenersOfPlabackStateChange(0,playing ? PlaybackListener.STATE_ENDED : PlaybackListener.STATE_STOPPED,new PlaybackEvent());
 				playing = false;
-				notifyListenersOfPlabackStateChange(0,PlaybackListener.STATE_ENDED,new PlaybackEvent());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

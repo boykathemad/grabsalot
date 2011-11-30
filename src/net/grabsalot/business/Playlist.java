@@ -40,7 +40,7 @@ public class Playlist implements PlaybackListener {
 	}
 
 	public void play() {
-		this.dumpTracks();
+//		this.dumpTracks();
 		if (this.isPlaying()) {
 			this.stop();
 		}
@@ -48,7 +48,7 @@ public class Playlist implements PlaybackListener {
 			index = 0;
 		}
 		player.setAudio(this.items.get(this.index).getPath());
-		System.out.println("Playlist.play():playing item: " + index);
+		System.out.println("Playlist.play():playing item: " + items.get(index));
 		player.play();
 	}
 

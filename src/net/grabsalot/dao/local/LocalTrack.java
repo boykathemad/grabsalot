@@ -1,11 +1,11 @@
 package net.grabsalot.dao.local;
 
+import java.util.logging.Level;
 import net.grabsalot.business.Logger;
 import net.grabsalot.dao.ITrack;
 import net.grabsalot.util.FileUtil;
 
 import org.dom4j.Element;
-import net.grabsalot.dao.local.LocalElement;
 
 import java.io.File;
 import java.io.IOException;
@@ -267,7 +267,7 @@ public class LocalTrack extends LocalElement implements ITrack {
 		try {
 			return tagger.getFirst(fieldKey);
 		} catch (Exception ex) {
-			Logger._().severe("LocalTrack:getTag: jaudioTagger: some nullpointer exception." + this.toString());
+			Logger._().log(Level.SEVERE, "LocalTrack:getTag: jaudioTagger: some nullpointer exception.{0}", this.toString());
 		}
 		return "";
 	}

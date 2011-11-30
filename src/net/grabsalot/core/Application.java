@@ -13,7 +13,7 @@ import net.grabsalot.business.Cacher;
 import net.grabsalot.business.Configuration;
 import net.grabsalot.business.Logger;
 import net.grabsalot.business.WorkingMode;
-import net.grabsalot.gui.LoadFrame;
+import net.grabsalot.gui.LoadDialog;
 import net.grabsalot.gui.MainFrame;
 import net.grabsalot.i18n.Translator;
 
@@ -99,6 +99,7 @@ public class Application {
 	 * and restarts the application.
 	 */
 	public static void restart() {
+		window.prepareForClose();
 		window.dispose();
 		window = null;
 		Cacher.reset();

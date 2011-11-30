@@ -33,7 +33,7 @@ public abstract class Task {
 				try {
 					Task.this.run();
 				} catch (Exception ex) {
-					System.out.println("OMFG WTF?");
+					System.out.println("Task error");
 					ex.printStackTrace();
 					for (TaskListener listener : Task.this.listeners) {
 						listener.taskError(new TaskEvent(Task.this,ex));

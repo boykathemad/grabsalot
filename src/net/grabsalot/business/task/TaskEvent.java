@@ -1,7 +1,5 @@
 package net.grabsalot.business.task;
 
-import net.grabsalot.business.task.Task;
-
 public class TaskEvent {
 	private Task taskObject;
 	private Exception taskException;

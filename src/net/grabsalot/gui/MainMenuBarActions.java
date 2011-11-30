@@ -21,7 +21,7 @@ public class MainMenuBarActions implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_SHOW_ABOUT)) {
-			new AboutDialog(Cacher.getMainFrame(), ModalityType.DOCUMENT_MODAL);
+			new AboutDialog();
 		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_SHOW_RULES)) {
@@ -33,7 +33,7 @@ public class MainMenuBarActions implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_LOAD)) {
-			LoadFrame lfrm = new LoadFrame();
+			new LoadDialog();
 		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_RESTART)) {

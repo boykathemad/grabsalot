@@ -1,5 +1,6 @@
 package net.grabsalot.gui;
 
+import java.awt.Color;
 import net.grabsalot.core.Application;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.Configuration;
@@ -7,8 +8,6 @@ import net.grabsalot.business.Logger;
 import net.grabsalot.business.WindowClosingAdapter;
 import net.grabsalot.business.WorkingMode;
 import net.grabsalot.i18n.Translator;
-
-import net.grabsalot.gui.LoadFrame;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -18,16 +17,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -39,18 +38,16 @@ import javax.swing.JRadioButton;
  * @author madboyka
  *
  */
-public class LoadFrame extends JFrame {
+public class LoadDialog extends JDialog {
 
 	private JComboBox cmbPath;
-	private JButton btnChoose, btnProcess;
+	private JButton btnBrowse, btnProcess;
 	private JRadioButton rbtCollection, rbtArtist, rbtAlbum;
 	private ButtonGroup btgSource;
-	private JCheckBox chkLoadLastOnStartup;
+	private JCheckBox chkLoadLastOnStartup,chkUnloadCurrentCollections;
 	private JFileChooser chooser;
 	private List<String> collectionHistory;
 	private File source;
-	private boolean loadLast;
-	private Application waitObject;
 	private static final long serialVersionUID = 2479242868400814549L;
 
 	/**
@@ -58,22 +55,21 @@ public class LoadFrame extends JFrame {
 	 * shows it if the configuration is set to do so.
 	 *
 	 */
-	public LoadFrame() {
-		this.setLayout(new GridBagLayout());
+	public LoadDialog() {
+		super(MainFrame.getInstance(), ModalityType.DOCUMENT_MODAL);
+		getContentPane().setLayout(new BoxLayout(getContentPane(),BoxLayout.PAGE_AXIS));
 		this.setResizable(false);
-		this.setTitle(Translator.$("ConfigFrameTitle"));
+		this.setTitle(Translator.$("LoadDialog.Title"));
 		this.addWindowListener(new WindowClosingAdapter());
 
-		this.loadLast = Configuration.getInstance().getBoolean(Configuration.LOAD_LAST_WORKING_DIRECTORY, false);
 		collectionHistory = Configuration.getInstance().getSourcesHistory();
 		source = new File(Configuration.getInstance().getStringProperty(Configuration.WORKING_PATH));
+
 
 		chooser = new JFileChooser(source);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.gridwidth = 4;
+		JPanel panPath = new JPanel();
 
 		cmbPath = new JComboBox(collectionHistory.toArray());
 		cmbPath.setPreferredSize(new Dimension(300, 20));
@@ -86,10 +82,10 @@ public class LoadFrame extends JFrame {
 				source = new File((String) cmbPath.getSelectedItem());
 			}
 		});
-		add(cmbPath, gbc);
+		panPath.add(cmbPath);
 
-		btnChoose = new JButton(Translator.$("BrowseButtonText"));
-		btnChoose.addActionListener(new ActionListener() {
+		btnBrowse = new JButton(Translator.$("BrowseButton.Label"));
+		btnBrowse.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -99,13 +95,13 @@ public class LoadFrame extends JFrame {
 				}
 			}
 		});
-		gbc.gridx = 4;
-		gbc.gridwidth = 1;
-		add(btnChoose, gbc);
+		panPath.add(btnBrowse);
 
-		rbtCollection = new JRadioButton(Translator.$("CollectionWorkingMode"));
-		rbtArtist = new JRadioButton(Translator.$("ArtistWorkingMode"));
-		rbtAlbum = new JRadioButton(Translator.$("AlbumWorkingMode"));
+		add(panPath);
+
+		rbtCollection = new JRadioButton(Translator.$("WorkingMode.Collection"));
+		rbtArtist = new JRadioButton(Translator.$("WorkingMode.Artist"));
+		rbtAlbum = new JRadioButton(Translator.$("WorkingMode.Album"));
 		rbtCollection.setSelected(true);
 
 		btgSource = new ButtonGroup();
@@ -114,44 +110,47 @@ public class LoadFrame extends JFrame {
 		btgSource.add(rbtAlbum);
 
 		JPanel panSource = new JPanel();
-		panSource.add(new JLabel(Translator.$("WorkingModeText")));
+		panSource.add(new JLabel(Translator.$("WorkingMode.Text")));
 		panSource.add(rbtCollection);
 		panSource.add(rbtArtist);
 		panSource.add(rbtAlbum);
 
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 5;
-		add(panSource, gbc);
+		add(panSource);
 
-		chkLoadLastOnStartup = new JCheckBox(Translator.$("LoadLastOnStartup"), this.loadLast);
+		chkLoadLastOnStartup = new JCheckBox(Translator.$("config.loadLastOnStartup"), Configuration.getInstance().getBoolean(Configuration.LOAD_LAST_WORKING_DIRECTORY, false));
 		chkLoadLastOnStartup.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				Configuration.getInstance().setProperty(Configuration.LOAD_LAST_WORKING_DIRECTORY, LoadFrame.this.chkLoadLastOnStartup.isSelected());
+				Configuration.getInstance().setProperty(Configuration.LOAD_LAST_WORKING_DIRECTORY, LoadDialog.this.chkLoadLastOnStartup.isSelected());
 			}
 		});
-		gbc.gridy = 2;
-		add(chkLoadLastOnStartup, gbc);
+		add(chkLoadLastOnStartup);
+		chkUnloadCurrentCollections = new JCheckBox(Translator.$("config.unloadOthers"), Configuration.getInstance().getBoolean("config.unloadOthersWhenLoading", false));
+		chkUnloadCurrentCollections.addItemListener(new ItemListener() {
 
-		btnProcess = new JButton(Translator.$("LoadButtonText"));
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Configuration.getInstance().setProperty("config.unloadOthersWhenLoading", LoadDialog.this.chkUnloadCurrentCollections.isSelected());
+			}
+		});
+		add(chkUnloadCurrentCollections);
+
+		btnProcess = new JButton(Translator.$("LoadButton.Label"));
 		btnProcess.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Application.workingPath = source;
-				Application.workingMode = LoadFrame.this.getSelectedMode();
+				Application.workingMode = LoadDialog.this.getSelectedMode();
 				if (Application.workingMode != null) {
 					Configuration.getInstance().addHistory(source);
-					LoadFrame.this.setVisible(false);
+					LoadDialog.this.setVisible(false);
 					Cacher.getMainFrame().load(Application.workingPath, Application.workingMode);
 				}
 			}
 		});
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		add(btnProcess, gbc);
+		add(btnProcess);
 
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -195,7 +194,4 @@ public class LoadFrame extends JFrame {
 		return mode;
 	}
 
-	public void setWaitObject(Application waitObj) {
-		this.waitObject = waitObj;
-	}
 }

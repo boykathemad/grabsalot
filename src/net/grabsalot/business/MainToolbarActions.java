@@ -1,6 +1,6 @@
 package net.grabsalot.business;
 
-import net.grabsalot.gui.LoadFrame;
+import net.grabsalot.gui.LoadDialog;
 import net.grabsalot.gui.RulesFrame;
 
 import net.grabsalot.business.Cacher;
@@ -18,9 +18,9 @@ public class MainToolbarActions implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "dsa") {
-			LoadFrame config = (LoadFrame)Cacher.getItem("frmConfigFrame");
+			LoadDialog config = (LoadDialog)Cacher.getItem("frmConfigFrame");
 			if (config == null) {
-				config = new LoadFrame();
+				config = new LoadDialog();
 			}
 			config.setVisible(true);
 		} else if (e.getActionCommand() == Constants.MAINMENU_ACTION_SHOW_RULES) {

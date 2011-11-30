@@ -1,6 +1,5 @@
 package net.grabsalot.gui;
 
-import java.awt.BasicStroke;
 import net.grabsalot.core.Application;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.CollectionTreeNode;
@@ -26,7 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.border.StrokeBorder;
 
 /**
  * The main frame for the application. This frame is the most important, as if
@@ -39,14 +37,13 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 
 	private static final long serialVersionUID = -2881416156872984622L;
 	private static MainFrame _instance = null;
-
 	private LocalCollection manager;
 	private File path;
 	private WorkingMode mode;
 	private MainMenuBar mainMenu;
 	private JStatusBar statusbar;
 	private JSplitPane splitter;
-	private JPanel panTree;
+	private CollectionTreePanel panTree;
 	private JScrollPane spnInfo;
 	private JPanel panInfo;
 	private PlayerPanel playerPanel;
@@ -283,8 +280,9 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 	@Override
 	public void updateLabels() {
 		this.setLabels();
+		mainMenu.updateLabels();
+		panTree.updateLabels();
 	}
-
 
 	public static MainFrame instantiate() {
 		if (_instance != null) {
@@ -292,5 +290,12 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 		}
 		_instance = new MainFrame();
 		return _instance;
+	}
+
+	public void prepareForClose() {
+		try {
+			playerPanel.playlist.getPlayer().stop();
+		} catch (Exception ex) {
+		}
 	}
 }

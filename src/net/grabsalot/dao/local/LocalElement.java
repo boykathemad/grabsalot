@@ -13,18 +13,17 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import net.grabsalot.dao.local.LocalElement;
 
 /**
  * Holds information about a local collection element. Also has useful methods.
- * 
+ *
  * @author madboyka
- * 
+ *
  */
 public abstract class LocalElement implements ICollectionElement {
 
 	protected File path;
-	protected final String[] audioExtensions = {"mp3", "mp4", "flac", "ape"};
+	protected final String[] audioExtensions = {"mp3", "mp4", "flac"};
 	protected final String[] imageExtensions = {"png", "jpg", "jpeg"};
 	public static final int COLLECTION_ELEMENT_TYPE = 1;
 	public static final int ARTIST_ELEMENT_TYPE = 2;
@@ -33,7 +32,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Returns the subdirectories of this elements path.
-	 * 
+	 *
 	 * @return
 	 */
 	protected File[] getSubDirectories() {
@@ -43,7 +42,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Return all audio files found in this elements directory.
-	 * 
+	 *
 	 * @return
 	 */
 	protected File[] getAudioFiles() {
@@ -52,7 +51,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Return all image file found in this elements directory.
-	 * 
+	 *
 	 * @return
 	 */
 	protected File[] getImageFiles() {
@@ -61,7 +60,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Returns a FileFilter that filter for image files.
-	 * 
+	 *
 	 * @return
 	 */
 	// FIXME transfer to FileUtils
@@ -83,7 +82,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Returns a FileFilter that filters for audio files.
-	 * 
+	 *
 	 * @return
 	 */
 	// FIXME transfer to FileUtils
@@ -105,7 +104,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Returns a FileFilter that filters for directories.
-	 * 
+	 *
 	 * @return
 	 */
 	// FIXME transfer to FileUtils
@@ -121,7 +120,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Sets the path for this local element
-	 * 
+	 *
 	 * @param path
 	 */
 	public void setPath(File path) {
@@ -130,7 +129,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Gets the path of this local element
-	 * 
+	 *
 	 * @return
 	 */
 	public File getPath() {
@@ -139,7 +138,7 @@ public abstract class LocalElement implements ICollectionElement {
 
 	/**
 	 * Returns an integer representing the type of this local element.
-	 * 
+	 *
 	 * @return possible values on {@link LocalElement}
 	 */
 	public abstract int getElementType();
@@ -149,7 +148,7 @@ public abstract class LocalElement implements ICollectionElement {
 	protected void saveXML(File file, Element xml) {
 		Document doc = DocumentHelper.createDocument(xml);
 		try {
-			doc.addDocType(xml.getName(), "-//grabsalot//DTD Music Metadata Markup Language 0.1//EN", "http://localhost/m3l.dtd");
+			doc.addDocType(xml.getName(), "-//grabsalot//DTD MultiMedia Metadata Markup Language 0.1//EN", "http://thetinynet.comule.com/m4l.dtd");
 			OutputFormat format = OutputFormat.createPrettyPrint();
 			XMLWriter writer = new XMLWriter(new OutputStreamWriter(new FileOutputStream(file)),format);
 			writer.write(doc);
