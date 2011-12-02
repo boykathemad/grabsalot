@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.Logger;
 import net.grabsalot.dao.local.LocalAlbum;
+import net.grabsalot.gui.MainFrame;
 import net.grabsalot.gui.progress.ProgressWindow;
 
 
@@ -31,7 +32,7 @@ public class AlbumArt {
 
 	public static void grabAll(LocalAlbum[] albums) {
 		AlbumArtGrabber aag = new AlbumArtGrabber();
-		ProgressWindow progress = Cacher.getMainFrame().createProgressWindow("Grabbing Albums...");
+		ProgressWindow progress = MainFrame.getInstance().createProgressWindow("Grabbing Albums...");
 		progress.display();
 		aag.setProgressWindow(progress);
 		aag.addAlbums(albums);

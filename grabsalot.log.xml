@@ -4,8 +4,8 @@
 <?xml-stylesheet type="text/xsl" href="logviewer.xsl"?>
 <log>
 <record>
-  <date>2011-11-30T13:26:23</date>
-  <millis>1322652383197</millis>
+  <date>2011-12-02T11:24:48</date>
+  <millis>1322817888251</millis>
   <sequence>0</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>INFO</level>
@@ -15,8 +15,8 @@
   <message>The application is starting up. First log entry.</message>
 </record>
 <record>
-  <date>2011-11-30T13:26:23</date>
-  <millis>1322652383847</millis>
+  <date>2011-12-02T11:24:48</date>
+  <millis>1322817888941</millis>
   <sequence>1</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>INFO</level>
@@ -26,255 +26,146 @@
   <message>Application started successfully!</message>
 </record>
 <record>
-  <date>2011-11-30T13:26:24</date>
-  <millis>1322652384356</millis>
+  <date>2011-12-02T11:24:49</date>
+  <millis>1322817889427</millis>
   <sequence>2</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
   <class>net.grabsalot.business.task.TaskManager</class>
   <method>start</method>
-  <thread>17</thread>
+  <thread>16</thread>
   <message>TaskManager:start: There was no souitable task to start.</message>
 </record>
 <record>
-  <date>2011-11-30T13:26:29</date>
-  <millis>1322652389975</millis>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892004</millis>
   <sequence>3</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
-  <class>net.grabsalot.gui.ArtistInfoPanel</class>
+  <class>net.grabsalot.gui.infopanels.ArtistInfoPanel</class>
   <method>loadFromLocal</method>
-  <thread>26</thread>
+  <thread>24</thread>
   <message>ArtistInfoPanel:loadFromLocal: failed to load Logo.</message>
 </record>
 <record>
-  <date>2011-11-30T13:26:29</date>
-  <millis>1322652389978</millis>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892008</millis>
   <sequence>4</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
   <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
   <method>callMethod</method>
-  <thread>26</thread>
-  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=artist.getInfo&amp;artist=Skrillex</message>
-</record>
-<record>
-  <date>2011-11-30T13:26:30</date>
-  <millis>1322652390973</millis>
-  <sequence>5</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
-  <method>callMethod</method>
-  <thread>26</thread>
-  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=album.getInfo&amp;album=Scary+Monsters+and+Nice+Sprites&amp;artist=Skrillex</message>
-</record>
-<record>
-  <date>2011-11-30T13:26:31</date>
-  <millis>1322652391262</millis>
-  <sequence>6</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>26</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
-<record>
-  <date>2011-11-30T13:26:33</date>
-  <millis>1322652393019</millis>
-  <sequence>7</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
-  <method>callMethod</method>
-  <thread>35</thread>
-  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=album.getInfo&amp;album=My+Name+Is+Skrillex&amp;artist=Skrillex</message>
-</record>
-<record>
-  <date>2011-11-30T13:26:33</date>
-  <millis>1322652393474</millis>
-  <sequence>8</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>35</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467661</millis>
-  <sequence>9</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.gui.ArtistInfoPanel</class>
-  <method>loadFromLocal</method>
-  <thread>37</thread>
-  <message>ArtistInfoPanel:loadFromLocal: failed to load Logo.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467662</millis>
-  <sequence>10</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
-  <method>callMethod</method>
-  <thread>37</thread>
+  <thread>24</thread>
   <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=artist.getInfo&amp;artist=Harrah</message>
 </record>
 <record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467883</millis>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892212</millis>
+  <sequence>5</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.gui.infopanels.ArtistInfoPanel</class>
+  <method>loadFromLocal</method>
+  <thread>25</thread>
+  <message>ArtistInfoPanel:loadFromLocal: failed to load Logo.</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892213</millis>
+  <sequence>6</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
+  <method>callMethod</method>
+  <thread>25</thread>
+  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=artist.getInfo&amp;artist=Skrillex</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892568</millis>
+  <sequence>7</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.Artist</class>
+  <method>getImageUrl</method>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@5bf926e3</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892569</millis>
+  <sequence>8</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.Artist</class>
+  <method>getImageUrl</method>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@e1651fe</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892583</millis>
+  <sequence>9</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.Artist</class>
+  <method>getImageUrl</method>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@71fc1432</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892583</millis>
+  <sequence>10</sequence>
+  <logger>grabsalot.util.MainLogger</logger>
+  <level>WARNING</level>
+  <class>net.grabsalot.dao.service.lastfm.Artist</class>
+  <method>getImageUrl</method>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@7bac9f86</message>
+</record>
+<record>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892583</millis>
   <sequence>11</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
   <class>net.grabsalot.dao.service.lastfm.Artist</class>
   <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@758c2762</message>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@21d55d9</message>
 </record>
 <record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467883</millis>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892584</millis>
   <sequence>12</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
   <class>net.grabsalot.dao.service.lastfm.Artist</class>
   <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@446dcf38</message>
+  <thread>24</thread>
+  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@76be3008</message>
 </record>
 <record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467884</millis>
+  <date>2011-12-02T11:24:52</date>
+  <millis>1322817892609</millis>
   <sequence>13</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.Artist</class>
-  <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@53f88a1</message>
+  <class>net.grabsalot.business.task.TaskManager</class>
+  <method>start</method>
+  <thread>24</thread>
+  <message>TaskManager:start: There was no souitable task to start.</message>
 </record>
 <record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467884</millis>
+  <date>2011-12-02T11:24:53</date>
+  <millis>1322817893721</millis>
   <sequence>14</sequence>
   <logger>grabsalot.util.MainLogger</logger>
   <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.Artist</class>
-  <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@e2304b8</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467885</millis>
-  <sequence>15</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.Artist</class>
-  <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@1d0ad348</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467885</millis>
-  <sequence>16</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.Artist</class>
-  <method>getImageUrl</method>
-  <thread>37</thread>
-  <message>Artist:getImageUrl:MalformedURLExceptionnet.grabsalot.dao.service.lastfm.Artist@31b52add</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:47</date>
-  <millis>1322652467902</millis>
-  <sequence>17</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
   <class>net.grabsalot.business.task.TaskManager</class>
   <method>start</method>
-  <thread>37</thread>
+  <thread>25</thread>
   <message>TaskManager:start: There was no souitable task to start.</message>
 </record>
-<record>
-  <date>2011-11-30T13:27:48</date>
-  <millis>1322652468508</millis>
-  <sequence>18</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.gui.ArtistInfoPanel</class>
-  <method>loadFromLocal</method>
-  <thread>38</thread>
-  <message>ArtistInfoPanel:loadFromLocal: failed to load Logo.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:48</date>
-  <millis>1322652468529</millis>
-  <sequence>19</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>38</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:49</date>
-  <millis>1322652469430</millis>
-  <sequence>20</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>46</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:50</date>
-  <millis>1322652470809</millis>
-  <sequence>21</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>48</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:50</date>
-  <millis>1322652470944</millis>
-  <sequence>22</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.ApiConnect</class>
-  <method>callMethod</method>
-  <thread>50</thread>
-  <message>ApiConnect:callMethod:URL:http://ws.audioscrobbler.com/2.0/?api_key=b1e7ce795ce107299236cb62b1ced720&amp;method=album.getInfo&amp;album=Mothership+001-READ+NFO-SAT-06-04-2011&amp;artist=Skrillex</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:51</date>
-  <millis>1322652471142</millis>
-  <sequence>23</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.dao.service.lastfm.Album</class>
-  <method>getWikiSummary</method>
-  <thread>50</thread>
-  <message>Album:getWikiSummary: wiki is null.net.grabsalot.dao.service.lastfm.Album@26273e89</message>
-</record>
-<record>
-  <date>2011-11-30T13:27:51</date>
-  <millis>1322652471145</millis>
-  <sequence>24</sequence>
-  <logger>grabsalot.util.MainLogger</logger>
-  <level>WARNING</level>
-  <class>net.grabsalot.business.task.TaskManager</class>
-  <method>start</method>
-  <thread>50</thread>
-  <message>TaskManager:start: There was no souitable task to start.</message>
-</record>
+</log>

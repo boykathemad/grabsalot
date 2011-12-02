@@ -34,13 +34,6 @@ public class Cacher {
 		return items.get(key);
 	}
 
-	/** Returns the Mainframe if store, null otherwise.
-	 * @return
-	 */
-	public static MainFrame getMainFrame() {
-		return (MainFrame) Cacher.getItem("frmMainFrame");
-	}
-
 	/**
 	 * Disposes of all frames stored in the cache and deletes all other infomation
 	 */

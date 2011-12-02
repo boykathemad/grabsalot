@@ -1,38 +1,100 @@
 package net.grabsalot.business;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import java.util.Random;
+import net.grabsalot.dao.ITrack;
 import net.grabsalot.dao.local.LocalTrack;
-import net.grabsalot.gui.PlayerPanel;
+import net.grabsalot.gui.components.PlayerPanel;
 import net.grabsalot.util.AudioPlayer;
 import net.grabsalot.util.players.PlaybackEvent;
 import net.grabsalot.util.players.PlaybackListener;
 
 public class Playlist implements PlaybackListener {
+
+	public static final int SHUFFLE_MODE_NONE = 0;
+	public static final int SHUFFLE_MODE_ON = 1;
+	public static final int SHUFFLE_MODE_RANDOM = 2;
+	public static final int REPEAT_MODE_NO = 0;
+	public static final int REPEAT_MODE_TRACK = 1;
+	public static final int REPEAT_MODE_ALBUM = 2;
+	public static final int REPEAT_MODE_PLAYLIST = 3;
 	private AudioPlayer player;
 	private List<LocalTrack> items;
 	private int index = -1;
 	private PlayerPanel playerPanel;
+	private int repeatMode = 0;
+	private int shuffleMode = 0;
+	private List<Integer> shuffleMap;
+	private Random randomizer;
 
 	public Playlist() {
-		this.items = new ArrayList<LocalTrack>();
-		this.player = new AudioPlayer();
-		this.player.addPlaybackListener(this);
+		shuffleMap = new ArrayList<Integer>();
+		items = new ArrayList<LocalTrack>();
+		player = new AudioPlayer();
+		randomizer = new Random(new Date().getTime());
+		player.addPlaybackListener(this);
 	}
 
 	public void add(LocalTrack track) {
-		this.items.add(track);
+		items.add(track);
+		afterAdd();
+	}
+
+	public void addAll(Collection<LocalTrack> allItems) {
+		items.addAll(allItems);
+		afterAdd();
+	}
+
+	private void afterAdd() {
+		if (shuffleMode == SHUFFLE_MODE_ON) {
+			createLinearMap();
+			createShuffleMap();
+		}
+	}
+
+	private void createLinearMap() {
+		shuffleMap.clear();
+		int i = 0;
+		while (i++ < items.size()) {
+			shuffleMap.add(i);
+		}
+	}
+
+	private void createShuffleMap() {
+		for (int i = shuffleMap.size() - 1; i > 0; --i) {
+			int j = randomizer.nextInt(i);
+			Integer a = shuffleMap.get(j);
+			shuffleMap.set(j, shuffleMap.get(i));
+			shuffleMap.set(i, a);
+		}
+		System.out.println(shuffleMap);
 	}
 
 	public LocalTrack getNext() {
-		return items.get(++index);
+		if (shuffleMode == SHUFFLE_MODE_NONE) {
+			index++;
+			if (index > items.size() - 1) {
+				index = 0;
+			}
+			return items.get(index);
+		} else if (shuffleMode == SHUFFLE_MODE_ON) {
+			index++;
+			if (index > items.size() - 1) {
+				index = 0;
+				createShuffleMap();
+			}
+			return items.get(shuffleMap.get(index));
+		} else {
+			return items.get(randomizer.nextInt(items.size()));
+		}
 	}
 
-	public void dumpTracks() {
-		for (LocalTrack track : items) {
-			System.out.println("Playlist:" + track.getArtist() + " - " + track);
-		}
+	public List<ITrack> getTracks() {
+		return new ArrayList<ITrack>(items);
 	}
 
 	public int getTrackCount() {
@@ -40,7 +102,6 @@ public class Playlist implements PlaybackListener {
 	}
 
 	public void play() {
-//		this.dumpTracks();
 		if (this.isPlaying()) {
 			this.stop();
 		}
@@ -71,7 +132,6 @@ public class Playlist implements PlaybackListener {
 			this.playerPanel.setTrack(this.items.get(index), this.getTrackLength());
 		}
 		if (newState == PlaybackListener.STATE_STOPPED) {
-
 		}
 		if (newState == PlaybackListener.STATE_ENDED) {
 			this.stop();
@@ -88,7 +148,7 @@ public class Playlist implements PlaybackListener {
 	public long getTrackLength() {
 		int length = player.getLength();
 		if (length < 0) {
-			length = this.items.get(index).getLength()*1000;
+			length = this.items.get(index).getLength();
 		}
 		return length;
 	}
@@ -99,15 +159,17 @@ public class Playlist implements PlaybackListener {
 
 	@Override
 	public void positionChanged(PlaybackEvent e) {
-
 	}
 
 	public void setPlayerPanel(PlayerPanel playerPanel) {
 		this.playerPanel = playerPanel;
 	}
 
+	public ITrack getCurrentTrack() {
+		return this.items.get(index);
+	}
+
 	public AudioPlayer getPlayer() {
 		return player;
 	}
-
 }

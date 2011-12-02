@@ -1,6 +1,5 @@
 package net.grabsalot.gui;
 
-import java.awt.Color;
 import net.grabsalot.core.Application;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.Configuration;
@@ -10,8 +9,6 @@ import net.grabsalot.business.WorkingMode;
 import net.grabsalot.i18n.Translator;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -19,7 +16,6 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -146,7 +142,7 @@ public class LoadDialog extends JDialog {
 				if (Application.workingMode != null) {
 					Configuration.getInstance().addHistory(source);
 					LoadDialog.this.setVisible(false);
-					Cacher.getMainFrame().load(Application.workingPath, Application.workingMode);
+					MainFrame.getInstance().load(Application.workingPath, Application.workingMode);
 				}
 			}
 		});

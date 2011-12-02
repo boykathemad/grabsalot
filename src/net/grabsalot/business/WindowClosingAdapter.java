@@ -23,7 +23,7 @@ public class WindowClosingAdapter extends WindowAdapter {
 	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if (Cacher.getMainFrame() == null || !Cacher.getMainFrame().isVisible()
+		if (MainFrame.getInstance() == null || !MainFrame.getInstance().isVisible()
 				|| e.getSource().getClass() == MainFrame.class) {
 			Application.close(e.getSource().getClass() == MainFrame.class);
 		}

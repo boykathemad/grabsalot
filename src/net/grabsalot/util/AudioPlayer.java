@@ -1,24 +1,20 @@
 package net.grabsalot.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.grabsalot.dao.local.LocalTrack;
-import net.grabsalot.util.players.ApePlayer;
-import net.grabsalot.util.players.FlacPlayer;
 import net.grabsalot.util.players.IPlayer;
-import net.grabsalot.util.players.MP3Player;
 import net.grabsalot.util.players.PlaybackListener;
 import net.grabsalot.util.players.SpiPlayer;
-
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 import net.grabsalot.util.players.PlaybackEvent;
 
 /**
- * @author madboyka The class that plays audio files, currently only supports
- *         MP3, via the JavaLayer library. This Class needs to be updated to
- *         also play flac files.
+ * The class that plays audio files.
  */
 public class AudioPlayer {
 
@@ -28,6 +24,7 @@ public class AudioPlayer {
 	private boolean playing = false;
 	private List<PlaybackListener> listeners;
 	private float volume = 0.0F;
+	private final CountDownLatch latch = new CountDownLatch(0);
 
 	public AudioPlayer() {
 		this((File) null);
@@ -74,6 +71,9 @@ public class AudioPlayer {
 	}
 
 	public void play() {
+		if (playing) {
+			stop();
+		}
 		System.out.println("AudioPlayer.play()");
 		thread = new PlayerThread();
 		thread.start();
@@ -82,6 +82,11 @@ public class AudioPlayer {
 
 	public void stop() {
 		player.stop();
+		try {
+			latch.await();
+		} catch (InterruptedException ex) {
+			Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+		}
 		this.playing = false;
 	}
 
@@ -97,6 +102,11 @@ public class AudioPlayer {
 			return player.getLength();
 		}
 		return -1;
+	}
+
+	private synchronized void sendEnd() {
+		notifyListenersOfPlabackStateChange(0, playing ? PlaybackListener.STATE_ENDED : PlaybackListener.STATE_STOPPED, new PlaybackEvent());
+
 	}
 
 	public void setPosition(int i) {
@@ -117,22 +127,38 @@ public class AudioPlayer {
 	}
 
 	private void notifyListenersOfPlabackStateChange(int oldState, int newState, PlaybackEvent e) {
+		System.err.println("STATE CHANGE NOTIFICATION");
 		for (PlaybackListener listener : this.listeners) {
 			listener.playbackStateChanged(oldState, newState, e);
 		}
 	}
 
+	public void seekTo(float ratio) {
+		if (player != null) {
+			player.seek(ratio);
+		}
+	}
+
 	class PlayerThread extends Thread {
+
+		public PlayerThread() {
+			super("Player Thread");
+		}
 
 		@Override
 		public void run() {
-			try {
-				playing = true;
-				player.play();
-				notifyListenersOfPlabackStateChange(0,playing ? PlaybackListener.STATE_ENDED : PlaybackListener.STATE_STOPPED,new PlaybackEvent());
-				playing = false;
-			} catch (Exception e) {
-				e.printStackTrace();
+			synchronized (latch) {
+				try {
+					playing = true;
+					player.play();
+					if (playing) {
+						sendEnd();
+					}
+					playing = false;
+				} catch (Exception e) {
+				} finally {
+					latch.countDown();
+				}
 			}
 		}
 	}

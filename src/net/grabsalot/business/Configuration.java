@@ -100,14 +100,20 @@ public class Configuration {
 	 *            the name of the directory
 	 */
 	public void addHistory(File workingPath) {
-		this.setProperty(Configuration.WORKING_PATH, workingPath.getAbsolutePath());
-		if (workingPath.getAbsolutePath().equals(this.getStringProperty(WORKING_PATH_HISTORY + "0"))) {
+		String value = workingPath.getAbsolutePath();
+		this.setProperty(Configuration.WORKING_PATH, value);
+		if (value.equals(this.getStringProperty(WORKING_PATH_HISTORY + "0"))) {
 			return;
 		}
-		for (int i = HISTORY_LENGHT; i > 0; --i) {
-			this.setProperty(WORKING_PATH_HISTORY + (i), this.getStringProperty(WORKING_PATH_HISTORY + (i - 1)));
+		String last = value;
+		for (int i = 0; i < HISTORY_LENGHT;  ++i) {
+			String a = getStringProperty(WORKING_PATH_HISTORY + (i));
+			this.setProperty(WORKING_PATH_HISTORY + (i), last);
+			if (value.equals(a)) {
+				return;
+			}
+			last = a;
 		}
-		this.setProperty(WORKING_PATH_HISTORY + "0", workingPath.getAbsolutePath());
 	}
 
 	/**

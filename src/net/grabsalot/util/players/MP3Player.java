@@ -194,7 +194,7 @@ public class MP3Player implements IPlayer {
 	}
 
 	@Override
-	public void seek() {
+	public void seek(float percent) {
 		// TODO Auto-generated method stub
 	}
 

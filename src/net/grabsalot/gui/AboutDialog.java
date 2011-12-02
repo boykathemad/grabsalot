@@ -1,19 +1,13 @@
 package net.grabsalot.gui;
 
+import net.grabsalot.core.Application;
+import net.grabsalot.gui.components.JImageBox;
+import net.grabsalot.util.ImageUtil;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
-import java.awt.Window;
-
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BoxLayout;
-import net.grabsalot.core.Application;
-import net.grabsalot.util.ImageUtil;
-
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 

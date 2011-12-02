@@ -3,16 +3,13 @@ package net.grabsalot.dao.service.lastfm;
 import java.util.HashMap;
 import java.util.List;
 
-import net.grabsalot.business.Cacher;
 import net.grabsalot.business.Playlist;
 import net.grabsalot.dao.local.LocalCollection;
 import net.grabsalot.dao.local.LocalTrack;
 
+import net.grabsalot.gui.MainFrame;
 import org.dom4j.Element;
 
-import net.grabsalot.dao.service.lastfm.ApiConnect;
-import net.grabsalot.dao.service.lastfm.LastFmException;
-import net.grabsalot.dao.service.lastfm.Track;
 
 public class User extends ApiConnect {
 
@@ -45,7 +42,7 @@ public class User extends ApiConnect {
 		}
 		this.info = this.info.element("recenttracks");
 		List<Element> tracks = this.getProperties("track");
-		LocalCollection man = Cacher.getMainFrame().getCollectionManager();
+		LocalCollection man = MainFrame.getInstance().getCollectionManager();
 		for (Element track : tracks) {
 			System.out.println("User.getRecentTracksPlaylist()");
 			List<LocalTrack> found = man.searchTracks(track.element("artist").getText(), track.element("name")

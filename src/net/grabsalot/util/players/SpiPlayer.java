@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.grabsalot.util.players;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,8 +21,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-
 /**
  *
  * @author madboyka
@@ -44,6 +37,7 @@ public class SpiPlayer implements IPlayer {
 	private AudioInputStream inputStream;
 	private AudioInputStream stream;
 	private AudioFormat outputFormat;
+	private AudioFileFormat format;
 	private float volume = 0F;
 
 	public SpiPlayer(File audioFile) {
@@ -88,20 +82,20 @@ public class SpiPlayer implements IPlayer {
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
 		Mixer mixer = null;
 		mixer = getMixer();
-		System.out.println("Using mixer: " + mixer.getMixerInfo().getName());
-		System.out.println("Mixer is supporting " + mixer.getSourceLineInfo().length + " source lines.");
-		System.out.println("Mixer is supporting " + mixer.getTargetLineInfo().length + " target lines.");
-		for (Line.Info linfo : mixer.getSourceLineInfo()) {
-			System.out.println("Line info: " + linfo.toString());
-		}
+//		System.out.println("Using mixer: " + mixer.getMixerInfo().getName());
+//		System.out.println("Mixer is supporting " + mixer.getSourceLineInfo().length + " source lines.");
+//		System.out.println("Mixer is supporting " + mixer.getTargetLineInfo().length + " target lines.");
+//		for (Line.Info linfo : mixer.getSourceLineInfo()) {
+//			System.out.println("Line info: " + linfo.toString());
+//		}
 		line = (SourceDataLine) mixer.getLine(info);
 		line.open(audioFormat);
 		return line;
 	}
 
 	private void open() throws Exception {
-		AudioFileFormat aff = AudioSystem.getAudioFileFormat(audioFile);
-		if (!AudioSystem.isFileTypeSupported(aff.getType())) {
+		format = AudioSystem.getAudioFileFormat(audioFile);
+		if (!AudioSystem.isFileTypeSupported(format.getType())) {
 //			throw new Exception("Unsupported file");
 		}
 		inputStream = AudioSystem.getAudioInputStream(audioFile);
@@ -158,7 +152,7 @@ public class SpiPlayer implements IPlayer {
 			inputStream.close();
 			open = false;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+//			ex.printStackTrace();
 		}
 	}
 
@@ -169,13 +163,14 @@ public class SpiPlayer implements IPlayer {
 		try {
 			audioFileFormat = AudioSystem.getAudioFileFormat(audioFile);
 			Map<String, Object> properties = audioFileFormat.properties();
-				System.out.println("Supported properties");
+//				System.out.println("Supported properties");
 			for (String key : properties.keySet()) {
-				System.out.println(key +" = " + properties.get(key));
+//				System.out.println(key +" = " + properties.get(key));
 			}
-//			duration = (Long) properties.get("duration");
-//			duration /= 1000000;
-			duration = 1000;
+			if (properties.containsKey("duration")) {
+				duration = (Long) properties.get("duration");
+				duration /= 1000000;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -234,7 +229,23 @@ public class SpiPlayer implements IPlayer {
 	}
 
 	@Override
-	public void seek() {
+	public void seek(float percent) {
+		if (inputStream.markSupported()) {
+			System.out.println("Mark supported");
+			try {
+				inputStream.reset();
+//				long pos = (long) ((stream.getFrameLength() * format.getFormat().getFrameSize()) *percent);
+				long pos = (long) ((format.getFrameLength()) * percent);
+				System.out.println("seek to:" + pos + "l:" +inputStream.getFormat().getFrameSize());
+				stream.skip(1041 * pos);
+			} catch (Exception ex) {
+				Logger.getLogger(SpiPlayer.class.getName()).log(Level.SEVERE, null, ex);
+			System.out.println("NO MArk supp");
+			ex.printStackTrace();
+			}
+		} else {
+			System.out.println("Mark NOT supported");
+		}
 	}
 
 	@Override

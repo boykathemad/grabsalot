@@ -5,7 +5,7 @@ import net.grabsalot.dao.local.LocalAlbum;
 import net.grabsalot.dao.local.LocalArtist;
 import net.grabsalot.dao.local.LocalCollection;
 import net.grabsalot.dao.local.LocalTrack;
-import net.grabsalot.gui.CollectionTreePanel;
+import net.grabsalot.gui.collectiontree.CollectionTreePanel;
 
 public class CollectionLoader extends Task {
 

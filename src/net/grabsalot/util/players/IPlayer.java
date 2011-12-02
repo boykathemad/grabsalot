@@ -16,7 +16,7 @@ public interface IPlayer {
 
 	public void stop();
 
-	public void seek();
+	public void seek(float percent);
 
 	public int getLength();
 

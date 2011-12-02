@@ -3,9 +3,9 @@ package net.grabsalot.gui;
 import net.grabsalot.business.Logger;
 import net.grabsalot.gui.settings.LookAndFeelSettings;
 
-import net.grabsalot.gui.JStatusBar;
+import net.grabsalot.gui.components.JStatusBar;
 import net.grabsalot.gui.SettingsFrame;
-import net.grabsalot.gui.SettingsPanel;
+import net.grabsalot.gui.components.SettingsPanel;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

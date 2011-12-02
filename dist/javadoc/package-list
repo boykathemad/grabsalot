@@ -6,6 +6,11 @@ net.grabsalot.dao
 net.grabsalot.dao.local
 net.grabsalot.dao.service.lastfm
 net.grabsalot.gui
+net.grabsalot.gui.collectiontree
+net.grabsalot.gui.components
+net.grabsalot.gui.controllers
+net.grabsalot.gui.infopanels
+net.grabsalot.gui.playlist
 net.grabsalot.gui.progress
 net.grabsalot.gui.settings
 net.grabsalot.i18n

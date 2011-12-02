@@ -1,7 +1,7 @@
 package net.grabsalot.gui.settings;
 
 import net.grabsalot.business.Configuration;
-import net.grabsalot.gui.SettingsPanel;
+import net.grabsalot.gui.components.SettingsPanel;
 
 import net.grabsalot.gui.settings.LookAndFeelSettings;
 

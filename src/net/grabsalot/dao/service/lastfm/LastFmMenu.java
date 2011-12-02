@@ -54,7 +54,7 @@ public class LastFmMenu extends JMenu implements ActionListener {
 			if (username != null) {
 				try {
 					User user = new User(username);
-					Cacher.getMainFrame().setPlaylist(user.getRecentTracksPlaylist());
+					MainFrame.getInstance().setPlaylist(user.getRecentTracksPlaylist());
 				} catch (Exception ex) {
 				}
 			}

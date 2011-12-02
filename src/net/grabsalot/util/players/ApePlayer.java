@@ -55,7 +55,7 @@ public class ApePlayer implements IPlayer {
 	}
 
 	@Override
-	public void seek() {
+	public void seek(float percent) {
 		// TODO Auto-generated method stub
 
 	}

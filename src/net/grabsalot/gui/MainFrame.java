@@ -1,5 +1,11 @@
 package net.grabsalot.gui;
 
+import net.grabsalot.gui.components.MainMenuBar;
+import net.grabsalot.gui.controllers.DetailViewManager;
+import net.grabsalot.gui.components.JStatusBar;
+import net.grabsalot.gui.components.PlayerPanel;
+import net.grabsalot.gui.components.LocalizableComponent;
+import net.grabsalot.gui.collectiontree.CollectionTreePanel;
 import net.grabsalot.core.Application;
 import net.grabsalot.business.Cacher;
 import net.grabsalot.business.CollectionTreeNode;
@@ -59,7 +65,7 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 		this.setBehavior();
 		this.setLabels();
 
-		Cacher.addItem(Cacher.MAINFRAME_NAME, this);
+//		Cacher.addItem(Cacher.MAINFRAME_NAME, this);
 	}
 
 	/**
@@ -234,7 +240,6 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 
 	public void setPlaylist(Playlist playlist) {
 		this.playlist = playlist;
-		this.playlist.dumpTracks();
 	}
 
 	public void playTracks(LocalTrack[] tracks) {

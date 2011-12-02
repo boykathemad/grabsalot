@@ -20,6 +20,7 @@ public class TickTimer implements Runnable {
 	}
 
 	public void start() {
+		if (running) stop();
 		runner = new Thread(this);
 		runner.setName(name);
 		running = true;

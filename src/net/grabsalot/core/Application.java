@@ -116,7 +116,7 @@ public class Application {
 
 	public static void close(boolean mainFrameClosing) {
 		if (mainFrameClosing) {
-			Cacher.getMainFrame().saveWindowState();
+			MainFrame.getInstance().saveWindowState();
 		}
 		Configuration.getInstance().save();
 		Logger._().fine("Application is closing. Last log entry.");
