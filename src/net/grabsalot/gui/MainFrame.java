@@ -7,7 +7,6 @@ import net.grabsalot.gui.components.PlayerPanel;
 import net.grabsalot.gui.components.LocalizableComponent;
 import net.grabsalot.gui.collectiontree.CollectionTreePanel;
 import net.grabsalot.core.Application;
-import net.grabsalot.business.Cacher;
 import net.grabsalot.business.CollectionTreeNode;
 import net.grabsalot.business.Configuration;
 import net.grabsalot.business.Logger;
@@ -31,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import net.grabsalot.gui.playlist.PlaylistPanel;
 
 /**
  * The main frame for the application. This frame is the most important, as if
@@ -54,6 +54,7 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 	private JPanel panInfo;
 	private PlayerPanel playerPanel;
 	private Playlist playlist;
+	private PlaylistPanel panPlaylist;
 
 	/**
 	 * The default constructor.
@@ -61,11 +62,6 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 	public MainFrame() {
 		this.setSize(960, 640);
 		this.setLocationRelativeTo(null);
-		this.setupComponents();
-		this.setBehavior();
-		this.setLabels();
-
-//		Cacher.addItem(Cacher.MAINFRAME_NAME, this);
 	}
 
 	/**
@@ -94,6 +90,8 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 
 	protected void setupComponents() {
 		this.setLayout(new BorderLayout(0, 0));
+
+		playlist = new Playlist();
 		mainMenu = new MainMenuBar();
 		add(mainMenu, BorderLayout.NORTH);
 
@@ -103,6 +101,8 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 		this.statusbar.add(this.playerPanel);
 		this.add(this.statusbar, BorderLayout.SOUTH);
 
+		panPlaylist = new PlaylistPanel();
+
 		panInfo = new JPanel();
 		panInfo.setLayout(new BoxLayout(panInfo, BoxLayout.PAGE_AXIS));
 		JLabel firstLabel = new JLabel(Translator.$("InfoPanel.SelectionEmpty"));
@@ -110,10 +110,12 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 		panInfo.add(firstLabel);
 
 		spnInfo = new JScrollPane(panInfo);
+//		spnInfo = new JScrollPane(panPlaylist);
 
 		panTree = new CollectionTreePanel(this);
 
 		splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTree, spnInfo);
+		splitter.setOneTouchExpandable(true);
 		add(splitter, BorderLayout.CENTER);
 	}
 
@@ -294,6 +296,9 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 			_instance.dispose();
 		}
 		_instance = new MainFrame();
+		_instance.setupComponents();
+		_instance.setBehavior();
+		_instance.setLabels();
 		return _instance;
 	}
 
@@ -302,5 +307,17 @@ public final class MainFrame extends JFrame implements LocalizableComponent {
 			playerPanel.playlist.getPlayer().stop();
 		} catch (Exception ex) {
 		}
+	}
+
+	public Playlist getPlaylist() {
+		return playlist;
+	}
+
+	public void showPlaylist() {
+		spnInfo.getViewport().setView(panPlaylist);
+	}
+
+	public void showInfoPanels() {
+		spnInfo.getViewport().setView(panInfo);
 	}
 }

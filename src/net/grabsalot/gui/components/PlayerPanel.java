@@ -20,6 +20,7 @@ import javax.swing.JSlider;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeListener;
 import net.grabsalot.business.Configuration;
+import net.grabsalot.gui.MainFrame;
 import net.grabsalot.util.TickListener;
 import net.grabsalot.util.TickTimer;
 
@@ -36,7 +37,7 @@ public class PlayerPanel extends JPanel implements TickListener {
 	private TickTimer timer;
 
 	public PlayerPanel() {
-		this.playlist = new Playlist();
+		this.playlist = MainFrame.getInstance().getPlaylist();
 		this.playlist.setPlayerPanel(this);
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 

@@ -30,6 +30,7 @@ public class Playlist implements PlaybackListener {
 	private int shuffleMode = 0;
 	private List<Integer> shuffleMap;
 	private Random randomizer;
+	private List<PlaylistListener> listeners;
 
 	public Playlist() {
 		shuffleMap = new ArrayList<Integer>();
@@ -37,6 +38,11 @@ public class Playlist implements PlaybackListener {
 		player = new AudioPlayer();
 		randomizer = new Random(new Date().getTime());
 		player.addPlaybackListener(this);
+		listeners = new ArrayList<PlaylistListener>();
+	}
+
+	public void addPlaylistListener(PlaylistListener listener) {
+		listeners.add(listener);
 	}
 
 	public void add(LocalTrack track) {
@@ -50,6 +56,9 @@ public class Playlist implements PlaybackListener {
 	}
 
 	private void afterAdd() {
+		for (PlaylistListener l : listeners) {
+			l.itemsChanged();
+		}
 		if (shuffleMode == SHUFFLE_MODE_ON) {
 			createLinearMap();
 			createShuffleMap();
@@ -120,6 +129,9 @@ public class Playlist implements PlaybackListener {
 	public void clear() {
 		this.items.clear();
 		this.index = -1;
+		for (PlaylistListener l : listeners) {
+			l.itemsChanged();
+		}
 	}
 
 	public void stop() {
@@ -135,12 +147,10 @@ public class Playlist implements PlaybackListener {
 		}
 		if (newState == PlaybackListener.STATE_ENDED) {
 			this.stop();
-			index++;
-			if (index == this.getTrackCount()) {
-				index = 0;
-			} else {
+			LocalTrack nextTrack = getNext();
+			if (nextTrack != null) {
 				this.play();
-				this.playerPanel.setTrack(this.items.get(index), this.getTrackLength());
+				this.playerPanel.setTrack(nextTrack, this.getTrackLength());
 			}
 		}
 	}
@@ -171,5 +181,19 @@ public class Playlist implements PlaybackListener {
 
 	public AudioPlayer getPlayer() {
 		return player;
+	}
+
+	public LocalTrack getTrack(int index) {
+		return items.get(index);
+	}
+
+	public void setTrack(int selectedRow) {
+		if (this.isPlaying()) {
+			this.stop();
+		}
+		index = selectedRow;
+		player.setAudio(this.items.get(this.index).getPath());
+		System.out.println("Playlist.play():playing item: " + items.get(index));
+		player.play();
 	}
 }

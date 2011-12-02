@@ -24,12 +24,14 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import net.grabsalot.business.CollectionLoader;
 import net.grabsalot.business.task.Task;
 import net.grabsalot.business.task.TaskListener;
 import net.grabsalot.business.task.TaskManager;
+import net.grabsalot.dao.local.LocalElement;
 import net.grabsalot.gui.components.LocalizableComponent;
 import net.grabsalot.gui.MainFrame;
 
@@ -40,6 +42,8 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 	private volatile JTree lstCollection;
 	private volatile CollectionTreeNode treeRoot;
 	private CollectionTreePopupMenu treePopupMenu;
+	private CollectionTreeModel treeModel;
+	private String lngTypeToSearch = "Type to search...";
 
 	public CollectionTreePanel(MainFrame container) {
 		this.setLayout(new BorderLayout());
@@ -50,12 +54,16 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				txtSearch.setText("Type to search...");
+				if ("".equals(txtSearch.getText())) {
+					txtSearch.setText(lngTypeToSearch);
+				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				txtSearch.setText("");
+				if (lngTypeToSearch.equals(txtSearch.getText())) {
+					txtSearch.setText("");
+				}
 			}
 		});
 		txtSearch.setMaximumSize(new Dimension(12000, 30));
@@ -71,16 +79,10 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 	}
 
 	private void setupTree() {
-		treeRoot = new CollectionTreeNode(null);
-		lstCollection = new JTree(treeRoot);
+		treeModel = new CollectionTreeModel();
+		treeRoot = treeModel.getRoot();
+		lstCollection = new JTree(treeModel);
 		treePopupMenu = new CollectionTreePopupMenu(lstCollection, this.container);
-		lstCollection.addTreeSelectionListener(new TreeSelectionListener() {
-
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				//container.loadSelectionInfo((CollectionTreeNode) e.getPath().getLastPathComponent());
-			}
-		});
 		lstCollection.setExpandsSelectedPaths(false);
 		lstCollection.setRootVisible(false);
 		lstCollection.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
@@ -115,12 +117,6 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 					treePopupMenu.show((CollectionTreeNode) lstCollection.getClosestPathForLocation(e.getX(), e.getY()).getLastPathComponent(), e.getX(), e.getY());
 					return;
 				}
-				if (e.getClickCount() == 1) {
-//					container.loadSelectionInfo((CollectionTreeNode) lstCollection.getLastSelectedPathComponent());
-				}
-				if (e.getButton() == MouseEvent.BUTTON1) {
-//					lstCollection.setSelectionRow(lstCollection.getClosestRowForLocation(e.getX(), e.getY()));
-				}
 			}
 		});
 
@@ -139,8 +135,13 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 
 			@Override
 			public void taskComplete(TaskEvent e) {
-				treeRoot.add(((CollectionLoader)e.getTaskObject()).getResult());
+//				myTreeModel.insertNodeInto(newChildNode, parentNode, index);
+//myTreeModel.
+//myTreeModel.setRoot(newRootNode);
+				treeModel.insertNodeInto(((CollectionLoader) e.getTaskObject()).getResult(), treeRoot,0);
+//				treeRoot.add();
 				container.setStatusBarIdle();
+				refreshTree();
 				lstCollection.scrollPathToVisible(new TreePath(((DefaultMutableTreeNode) treeRoot.getFirstChild()).getPath()));
 			}
 		});
@@ -156,16 +157,42 @@ public class CollectionTreePanel extends JPanel implements LocalizableComponent 
 	 *            the string to matched the node names against
 	 */
 	public void filterTreeNodes(String filter) {
+		filterTreeNodes(treeRoot, filter);
+//		refreshTree();
+	}
+
+	private void filterTreeNodes(CollectionTreeNode node, String filter) {
 		CollectionTreeNode i;
-		Enumeration<DefaultMutableTreeNode> en = treeRoot.children();
+		Enumeration<DefaultMutableTreeNode> en = node.children();
 		while (en.hasMoreElements()) {
 			i = (CollectionTreeNode) en.nextElement();
-			if (((LocalArtist) i.getElement()).getName().startsWith(filter)) {
-				lstCollection.expandPath(new TreePath(i.getPath()));
-				lstCollection.scrollPathToVisible(new TreePath(i.getPath()));
-			} else {
+			switch (i.getElementType()) {
+				case LocalElement.COLLECTION_ELEMENT_TYPE:
+					filterTreeNodes(i, filter);
+					break;
+				case LocalElement.ARTIST_ELEMENT_TYPE:
+					if (((LocalArtist) i.getElement()).getName().startsWith(filter)) {
+						lstCollection.expandPath(new TreePath(i.getPath()));
+					} else {
+						treeModel.removeNodeFromParent(i);
+					}
+//					lstCollection.scrollPathToVisible(new TreePath(i.getPath()));
+					break;
+				case LocalElement.ALBUM_ELEMENT_TYPE:
+
+					break;
+				case LocalElement.TRACK_ELEMENT_TYPE:
+
+					break;
 			}
 		}
+	}
+
+	public void refreshTree() {
+		lstCollection.setModel(new DefaultTreeModel(null));
+		lstCollection.setModel(treeModel);
+//		lstCollection.revalidate();
+//		lstCollection.repaint();
 	}
 
 	public void clear() {

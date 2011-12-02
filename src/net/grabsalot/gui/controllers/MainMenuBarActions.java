@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBoxMenuItem;
 import net.grabsalot.gui.AboutDialog;
 import net.grabsalot.gui.LoadDialog;
+import net.grabsalot.gui.MainFrame;
 import net.grabsalot.gui.components.MainMenuBar;
 import net.grabsalot.gui.SettingsFrame;
 
@@ -27,9 +28,17 @@ public class MainMenuBarActions implements ActionListener {
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_SHOW_ABOUT)) {
 			new AboutDialog();
 		}
+		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_VIEWPLAYLIST)) {
+			boolean show = !DetailViewManager.getPlaylistView();
+			DetailViewManager.setPlaylistView(show);
+			if (show) {
+				MainFrame.getInstance().showPlaylist();
+			} else {
+				MainFrame.getInstance().showInfoPanels();
+			}
+		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_SHOW_RULES)) {
-			//Cacher.getMainFrame().scanTracks();
 		}
 
 		if (e.getActionCommand().equals(Constants.MAINMENU_ACTION_SHOW_SETTINGS)) {

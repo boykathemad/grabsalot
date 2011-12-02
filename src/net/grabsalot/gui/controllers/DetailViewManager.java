@@ -29,6 +29,7 @@ import net.grabsalot.i18n.Translator;
 public class DetailViewManager {
 
 	private static EDetailViewMode detailViewMode = EDetailViewMode.InfoPanels;
+	private static boolean playlistView = false;
 	private static TaskListener loadInfoEventListener;
 	private static JComponent[] infoPanelComponents;
 
@@ -51,6 +52,14 @@ public class DetailViewManager {
 				MainFrame.getInstance().getInfoPanel().removeAll();
 			}
 		};
+	}
+
+	public static boolean getPlaylistView() {
+		return playlistView;
+	}
+
+	static void setPlaylistView(boolean b) {
+		playlistView = b;
 	}
 
 	private DetailViewManager() {
@@ -129,6 +138,9 @@ public class DetailViewManager {
 	 *            the node to load the information panels for
 	 */
 	public static void loadSelectionInfo(final CollectionTreeNode node) {
+		if (playlistView) {
+			return;
+		}
 		switch (detailViewMode) {
 			case InfoPanels:
 				loadInfoPanelsInfo(node);
@@ -153,7 +165,6 @@ public class DetailViewManager {
 				if (node.getElementType() == LocalElement.ARTIST_ELEMENT_TYPE) {
 					infoPanelComponents = new GenericInfoPanel[1];
 					loadArtistInfo(node, false);
-					System.out.println("ARTIST LOADED");
 				}
 				if (node.getElementType() == LocalElement.ALBUM_ELEMENT_TYPE) {
 					infoPanelComponents = new GenericInfoPanel[2];
@@ -182,7 +193,7 @@ public class DetailViewManager {
 	 *            whether to show the panel in minimal or normal mode
 	 */
 	private static void loadArtistInfo(CollectionTreeNode node, boolean minimal) {
-		MainFrame.getInstance().setStatusBarText(Translator.$("StatusText.LoadingArtist"));
+		MainFrame.getInstance().setStatusBarText(Translator.$("statusText.loadingArtist"));
 		ArtistInfoPanel panel = (ArtistInfoPanel) Cacher.getItem("artistLastLoaded");
 		if (panel == null || !((LocalArtist) node.getElement()).getName().equals(panel.getElementName())) {
 			LocalArtist artist = (LocalArtist) node.getElement();

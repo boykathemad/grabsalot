@@ -17,6 +17,7 @@ public final class Constants {
 	public static final String MAINMENU_ACTION_VIEWMODE_CHANGED = "viewChanged";
 	public static final String MAINMENU_ACTION_SHOW_GENRE_STATS = "showGenreStats";
 	public static final String MAINMENU_ACTION_SHOW_SIZE_STATS = "showSizeStats";
+	public static final String MAINMENU_ACTION_VIEWPLAYLIST = "switchShowPlaylist";
 	public static final int COLLECTION_AS_SOURCE = 1;
 	public static final int ARTIST_AS_SOURCE = 2;
 	public static final int ALBUM_AS_SOURCE = 3;

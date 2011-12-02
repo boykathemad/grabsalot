@@ -17,6 +17,7 @@ import net.grabsalot.i18n.Translator;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -30,6 +31,7 @@ public class MainMenuBar extends JMenuBar implements LocalizableComponent {
 	private ButtonGroup detailViewGroup;
 	private HashMap<ButtonModel, EDetailViewMode> detailViewMap;
 	private JMenu mFile, mView, mOptions, mLanguages, mDetailView, mLastFm, mHelp;
+	private JMenuItem miViewPlaylist;
 
 	public MainMenuBar() {
 		actionListener = new MainMenuBarActions(this);
@@ -57,6 +59,8 @@ public class MainMenuBar extends JMenuBar implements LocalizableComponent {
 		mHelp.setText(Translator.$("menu.help"));
 		mLanguages.setText(Translator.$("menu.languages"));
 		mDetailView.setText(Translator.$("menu.detailView"));
+
+		miViewPlaylist.setText(Translator.$("menu.showPlaylist"));
 	}
 
 	private JMenu getFileMenu() {
@@ -70,6 +74,32 @@ public class MainMenuBar extends JMenuBar implements LocalizableComponent {
 		miRestart.addActionListener(actionListener);
 		mFile.add(miRestart);
 		return mFile;
+	}
+
+	public final JMenu getViewMenu() {
+		mView = new JMenu();
+
+		mDetailView = new JMenu();
+		detailViewGroup = new ButtonGroup();
+		detailViewMap = new HashMap<ButtonModel, EDetailViewMode>();
+		for (EDetailViewMode mode : EDetailViewMode.values()) {
+			JMenuItem modeMenu = new JRadioButtonMenuItem(Translator.$(mode.toString()));
+			if (DetailViewManager.getDetailViewMode() == mode) {
+				modeMenu.setSelected(true);
+			}
+			modeMenu.setActionCommand(Constants.MAINMENU_ACTION_VIEWMODE_CHANGED);
+			modeMenu.addActionListener(actionListener);
+			detailViewMap.put(modeMenu.getModel(), mode);
+			detailViewGroup.add(modeMenu);
+			mDetailView.add(modeMenu);
+		}
+		mView.add(mDetailView);
+		miViewPlaylist = new JCheckBoxMenuItem();
+		miViewPlaylist.addActionListener(actionListener);
+		miViewPlaylist.setActionCommand(Constants.MAINMENU_ACTION_VIEWPLAYLIST);
+		mView.add(miViewPlaylist);
+
+		return mView;
 	}
 
 	private JMenu getOptionsMenu() {
@@ -118,27 +148,6 @@ public class MainMenuBar extends JMenuBar implements LocalizableComponent {
 
 		mHelp.add(miAbout);
 		return mHelp;
-	}
-
-	public final JMenu getViewMenu() {
-		mView = new JMenu();
-
-		mDetailView = new JMenu();
-		detailViewGroup = new ButtonGroup();
-		detailViewMap = new HashMap<ButtonModel, EDetailViewMode>();
-		for (EDetailViewMode mode : EDetailViewMode.values()) {
-			JMenuItem modeMenu = new JRadioButtonMenuItem(Translator.$(mode.toString()));
-			if (DetailViewManager.getDetailViewMode() == mode) {
-				modeMenu.setSelected(true);
-			}
-			modeMenu.setActionCommand(Constants.MAINMENU_ACTION_VIEWMODE_CHANGED);
-			modeMenu.addActionListener(actionListener);
-			detailViewMap.put(modeMenu.getModel(), mode);
-			detailViewGroup.add(modeMenu);
-			mDetailView.add(modeMenu);
-		}
-		mView.add(mDetailView);
-		return mView;
 	}
 
 	public EDetailViewMode getDetailView() {
